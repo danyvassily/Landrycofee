@@ -5,8 +5,11 @@ import type {
 } from './finance';
 import {
   DEFAULT_SAVINGS_ASSUMPTIONS,
+  ZERO_SAVINGS_ASSUMPTIONS,
   DEFAULT_CAPEX_ASSUMPTIONS,
+  ZERO_CAPEX_ASSUMPTIONS,
   DEFAULT_FINANCING_ASSUMPTIONS,
+  ZERO_FINANCING_ASSUMPTIONS,
   INITIAL_RESEARCH_NOTES,
   INITIAL_PROPERTY_EVALUATIONS,
   INITIAL_FOUNDER_IDEAS,
@@ -17,7 +20,7 @@ import {
   type RoadmapMilestone,
 } from './project-data';
 
-export const STORAGE_KEY = 'project_living_room_founder_workspace_v1';
+export const STORAGE_KEY = 'project_living_room_founder_workspace_v2';
 
 export interface PersistedWorkspaceState {
   version: number;
@@ -33,7 +36,7 @@ export interface PersistedWorkspaceState {
 
 export function getDefaultWorkspaceState(): PersistedWorkspaceState {
   return {
-    version: 1,
+    version: 2,
     lastUpdatedIso: new Date().toISOString(),
     savingsAssumptions: { ...DEFAULT_SAVINGS_ASSUMPTIONS },
     capexAssumptions: { ...DEFAULT_CAPEX_ASSUMPTIONS },
@@ -42,6 +45,18 @@ export function getDefaultWorkspaceState(): PersistedWorkspaceState {
     propertyEvaluations: [...INITIAL_PROPERTY_EVALUATIONS],
     founderIdeas: [...INITIAL_FOUNDER_IDEAS],
     roadmapMilestones: [...INITIAL_ROADMAP_MILESTONES],
+  };
+}
+
+export function getZeroFinancialAssumptionsState(
+  current: PersistedWorkspaceState
+): PersistedWorkspaceState {
+  return {
+    ...current,
+    lastUpdatedIso: new Date().toISOString(),
+    savingsAssumptions: { ...ZERO_SAVINGS_ASSUMPTIONS },
+    capexAssumptions: { ...ZERO_CAPEX_ASSUMPTIONS },
+    financingAssumptions: { ...ZERO_FINANCING_ASSUMPTIONS },
   };
 }
 
@@ -57,7 +72,7 @@ export function loadWorkspaceState(): PersistedWorkspaceState {
     const parsed = JSON.parse(raw) as Partial<PersistedWorkspaceState>;
     const defaults = getDefaultWorkspaceState();
     return {
-      version: 1,
+      version: 2,
       lastUpdatedIso: parsed.lastUpdatedIso || defaults.lastUpdatedIso,
       savingsAssumptions: {
         ...defaults.savingsAssumptions,

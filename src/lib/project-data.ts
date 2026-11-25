@@ -27,39 +27,39 @@ export const WORKSPACE_MODULES: ModuleDefinition[] = [
     code: 'MOD-01',
     label: 'Tableau de Bord',
     shortLabel: 'Cockpit',
-    subtitle: 'Synthèse exécutive, jalons Décembre 2027, indicateurs financiers & gouvernance privée',
-    statusBadge: 'Synthèse Live',
+    subtitle: 'Vue d’ensemble du prototype MVP, synthèse des simulateurs et statut honnête du projet',
+    statusBadge: 'Prototype MVP',
   },
   {
     id: 'finance',
     code: 'MOD-02',
     label: 'Finance & Simulateurs',
     shortLabel: 'Simulateurs',
-    subtitle: 'Scénarios d’épargne fondateurs, plan de financement, écart (Funding Gap) & amortissement',
-    statusBadge: 'Hypothèses Modifiables',
+    subtitle: 'Simulateurs d’épargne, plan de financement, Funding Gap et amortissement (valeurs d’exemple neutres)',
+    statusBadge: 'Placeholders Modifiables',
   },
   {
     id: 'research',
     code: 'MOD-03',
-    label: 'Recherche & Réglementation',
+    label: 'Questions & Vérifications',
     shortLabel: 'Recherche',
-    subtitle: 'Cadre réglementaire parisien, grilles d’observation terrain & journal de veille vérifiée',
-    statusBadge: 'Zéro Donnée Fabriquée',
+    subtitle: 'Questions juridiques et techniques à valider avec des professionnels (aucune conclusion juridique affirmée)',
+    statusBadge: 'Checklist à Valider',
   },
   {
     id: 'property',
     code: 'MOD-04',
     label: 'Immobilier & Local',
     shortLabel: 'Immobilier',
-    subtitle: 'Cahier des charges technique Paris, simulateur de compatibilité & suivi des baux candidats',
-    statusBadge: 'Critères Techniques',
+    subtitle: 'Grille de visite indicative et questions techniques à poser lors de la prospection de locaux',
+    statusBadge: 'Grille Indicative',
   },
   {
     id: 'idealab',
     code: 'MOD-05',
     label: 'Idea Lab & Concept',
     shortLabel: 'Idea Lab',
-    subtitle: 'Architecture d’expérience Jour/Nuit, ingénierie acoustique & expérimentations fondateurs',
+    subtitle: 'Hypothèses d’organisation Jour/Nuit et carnet d’idées à tester (sans prévisions chiffrées)',
     statusBadge: 'Atelier Conceptuel',
   },
   {
@@ -67,98 +67,158 @@ export const WORKSPACE_MODULES: ModuleDefinition[] = [
     code: 'MOD-06',
     label: 'Feuille de Route 2027',
     shortLabel: 'Roadmap',
-    subtitle: 'Séquencement opérationnel Q4 2026 – Décembre 2027, chemin critique & portes de décision',
+    subtitle: 'Étapes indicatives vers Décembre 2027 et journal de progression locale',
     statusBadge: 'Cible Déc. 2027',
   },
 ];
 
 /**
- * Hypothèses par défaut — clairement balisées comme HYPOTHÉTIQUES dans l'interface
+ * Exemples fictifs neutres (Placeholders) — Ne contiennent aucune donnée personnelle
+ * (ni salaire, ni loyer personnel) et ne constituent pas une prévision financière.
  */
 export const DEFAULT_SAVINGS_ASSUMPTIONS: SavingsAssumptions = {
-  initialSavings: 52000,
-  monthlyContribution: 3400,
-  monthsToTarget: 13,
-  annualYieldPercent: 2.8,
-  exceptionalContribution: 12000,
-  exceptionalContributionMonth: 6,
-  targetFounderEquity: 110000,
+  initialSavings: 20000,
+  monthlyContribution: 1000,
+  monthsToTarget: 24,
+  annualYieldPercent: 2.0,
+  exceptionalContribution: 0,
+  exceptionalContributionMonth: 12,
+  targetFounderEquity: 45000,
+};
+
+export const ZERO_SAVINGS_ASSUMPTIONS: SavingsAssumptions = {
+  initialSavings: 0,
+  monthlyContribution: 0,
+  monthsToTarget: 24,
+  annualYieldPercent: 0,
+  exceptionalContribution: 0,
+  exceptionalContributionMonth: 12,
+  targetFounderEquity: 0,
 };
 
 export const DEFAULT_CAPEX_ASSUMPTIONS: ProjectCapexAssumptions = {
-  leaseAcquisition: 95000,
-  renovationAcoustics: 165000,
-  laundryEquipment: 88000,
-  coffeeBarEquipment: 48000,
-  hiFiSoundSystem: 34000,
-  legalLicensingArch: 28000,
-  workingCapitalReserve: 42000,
+  leaseAcquisition: 40000,
+  renovationAcoustics: 80000,
+  laundryEquipment: 50000,
+  coffeeBarEquipment: 25000,
+  hiFiSoundSystem: 15000,
+  legalLicensingArch: 15000,
+  workingCapitalReserve: 25000,
+};
+
+export const ZERO_CAPEX_ASSUMPTIONS: ProjectCapexAssumptions = {
+  leaseAcquisition: 0,
+  renovationAcoustics: 0,
+  laundryEquipment: 0,
+  coffeeBarEquipment: 0,
+  hiFiSoundSystem: 0,
+  legalLicensingArch: 0,
+  workingCapitalReserve: 0,
 };
 
 export const DEFAULT_FINANCING_ASSUMPTIONS: ProjectFinancingAssumptions = {
   syncFounderEquityFromSavings: true,
-  manualFounderEquity: 110000,
-  honorLoanZeroRate: 35000,
-  grantsAndSubsidies: 10000,
-  bankLoanPrincipal: 345000,
-  annualInterestRatePercent: 4.15,
-  annualInsuranceRatePercent: 0.36,
+  manualFounderEquity: 45000,
+  honorLoanZeroRate: 15000,
+  grantsAndSubsidies: 0,
+  bankLoanPrincipal: 185000,
+  annualInterestRatePercent: 4.0,
+  annualInsuranceRatePercent: 0.35,
   loanDurationYears: 7,
-  gracePeriodMonths: 3,
-  hypotheticalMonthlyEbitda: 8200,
+  gracePeriodMonths: 0,
+  hypotheticalMonthlyEbitda: 0,
+};
+
+export const ZERO_FINANCING_ASSUMPTIONS: ProjectFinancingAssumptions = {
+  syncFounderEquityFromSavings: false,
+  manualFounderEquity: 0,
+  honorLoanZeroRate: 0,
+  grantsAndSubsidies: 0,
+  bankLoanPrincipal: 0,
+  annualInterestRatePercent: 4.0,
+  annualInsuranceRatePercent: 0.35,
+  loanDurationYears: 7,
+  gracePeriodMonths: 0,
+  hypotheticalMonthlyEbitda: 0,
 };
 
 export interface RegulatoryCheckItem {
   id: string;
-  category: 'Acoustique' | 'Licence & Débit de Boissons' | 'Laverie & Technique' | 'ERP & Sécurité';
+  category:
+    | 'Acoustique & Voisinage'
+    | 'Licences & Débit de Boissons'
+    | 'Laverie & Hygiène'
+    | 'Urbanisme & ERP';
   title: string;
-  authority: string;
-  requirementSummary: string;
-  verificationMethod: string;
-  riskLevel: 'Critique' | 'Élevé' | 'Modéré';
+  whoToConsult: string;
+  questionsToValidate: string[];
+  verificationStatus: string;
+  officialSourceUrl: string | null;
+  lastCheckedDate: string | null;
 }
 
+/**
+ * Liste de questions pratiques à vérifier auprès de professionnels qualifiés.
+ * Aucune règle juridique ni aucun seuil technique n'est présenté comme acquis sans source officielle vérifiée.
+ */
 export const REGULATORY_FRAMEWORK_ITEMS: RegulatoryCheckItem[] = [
   {
-    id: 'reg-acoustic-eie',
-    category: 'Acoustique',
-    title: 'Étude d’Impact des Nuisances Sonores (EINS — Décret Bruit)',
-    authority: 'Bureau d’études acoustiques agréé / Préfecture de Police de Paris',
-    requirementSummary:
-      'Obligatoire pour toute diffusion musicale amplifiée. Respect strict des critères d’émergence dans les logements contigus (3 dB(A) en global, 3 dB par bande d’octave de 125 Hz à 4 kHz) et pose d’un limiteur-enregistreur scellé.',
-    verificationMethod: 'Mesures in situ avant et après travaux d’isolation boîte-dans-la-boîte + vibrations machines à laver.',
-    riskLevel: 'Critique',
+    id: 'reg-acoustic-questions',
+    category: 'Acoustique & Voisinage',
+    title: 'Quelles obligations acoustiques s’appliqueront à la diffusion musicale et aux machines ?',
+    whoToConsult: 'Bureau d’études acoustiques qualifié & syndic de copropriété',
+    questionsToValidate: [
+      'Dans quels cas précis une étude d’impact des nuisances sonores (EINS) est-elle requise pour l’ambiance sonore envisagée en soirée ?',
+      'Quelles sont les valeurs limites d’émergence applicables vis-à-vis des logements voisins et comment traiter les vibrations basse fréquence de l’essorage ?',
+      'Le règlement de copropriété de l’immeuble visé comporte-t-il des clauses restrictives sur les horaires ou le bruit ?',
+    ],
+    verificationStatus: 'Non vérifié — À valider avec un acousticien et les textes officiels en vigueur',
+    officialSourceUrl: null,
+    lastCheckedDate: null,
   },
   {
-    id: 'reg-licence-iv',
-    category: 'Licence & Débit de Boissons',
-    title: 'Mutation / Transfert Licence IV & Permis d’Exploitation',
-    authority: 'Préfecture de Police de Paris — Bureau des Polices Administratives',
-    requirementSummary:
-      'La création pure de Licence IV étant interdite à Paris, acquisition d’une licence existante par mutation/translation dans le respect des zones protégées (arrêté préfectoral distances écoles/édifices).',
-    verificationMethod: 'Vérification cadastrale du périmètre de protection avant signature de promesse de bail.',
-    riskLevel: 'Critique',
+    id: 'reg-licence-questions',
+    category: 'Licences & Débit de Boissons',
+    title: 'Quel régime de licence (Licence III, Licence IV, licence restaurant) est adapté et disponible ?',
+    whoToConsult: 'Avocat spécialisé en droit des débits de boissons / Services préfectoraux ou municipaux',
+    questionsToValidate: [
+      'Quelles sont les règles en vigueur à Paris concernant l’achat, la mutation ou le transfert d’une Licence III ou Licence IV selon la carte des boissons retenue ?',
+      'Quels sont les périmètres de protection applicables autour du local pressenti (arrêtés préfectoraux en vigueur à la date du projet) ?',
+      'Quelles formations (permis d’exploitation, hygiène alimentaire) et quels délais d’instruction faut-il anticiper ?',
+    ],
+    verificationStatus: 'Non vérifié — À valider avec un avocat spécialisé (aucune conclusion juridique intégrée)',
+    officialSourceUrl: null,
+    lastCheckedDate: null,
   },
   {
-    id: 'reg-laundry-vent',
-    category: 'Laverie & Technique',
-    title: 'Séparation Sanitaire des Flux, Hygrométrie & Alimentation Triphasée',
-    authority: 'Règlement Sanitaire Départemental de Paris (RSD) & Copropriété',
-    requirementSummary:
-      'Cloisonnement fonctionnel et aéraulique entre la zone de traitement du linge et l’espace de préparation/consommation alimentaire. Évacuation des buées ou recours à des séchoirs professionnels à pompe à chaleur en circuit fermé.',
-    verificationMethod: 'Validation sur plans par architecte ERP et bureau de contrôle technique.',
-    riskLevel: 'Élevé',
+    id: 'reg-laundry-questions',
+    category: 'Laverie & Hygiène',
+    title: 'Comment organiser la séparation fonctionnelle entre l’espace laverie et le comptoir café/bar ?',
+    whoToConsult: 'Architecte commercial, bureau de contrôle technique & fournisseurs de matériel',
+    questionsToValidate: [
+      'Quelles dispositions sanitaires et d’agencement faut-il prévoir pour séparer le flux de linge des clients et la zone de préparation/service de boissons ?',
+      'Quelles sont les solutions techniques de séchage (évacuation extérieure vs séchoirs à condensation/pompe à chaleur) autorisées par l’immeuble ?',
+      'Quels sont les besoins réels en alimentation électrique, arrivée d’eau et diamètre d’évacuation selon le parc machines choisi ?',
+    ],
+    verificationStatus: 'Non vérifié — À valider sur plans avec architecte et bureau de contrôle',
+    officialSourceUrl: null,
+    lastCheckedDate: null,
   },
   {
-    id: 'reg-erp-5',
-    category: 'ERP & Sécurité',
-    title: 'Classement ERP 5e Catégorie (Type N & Prestation de Services)',
-    authority: 'Direction de l’Urbanisme — Ville de Paris / Préfecture',
-    requirementSummary:
-      'Autorisation de Travaux (AT) pour changement d’aménagement intérieur, accessibilité PMR (cheminement, comptoir abaissé, sanitaire adapté) et dégagements de sécurité.',
-    verificationMethod: 'Dépôt du dossier AT/ERP 4 à 5 mois avant ouverture cible.',
-    riskLevel: 'Élevé',
-  },
+    id: 'reg-erp-questions',
+    category: 'Urbanisme & ERP',
+    title: 'Quelles démarches d’urbanisme et d’accessibilité ERP seront nécessaires pour le local ?',
+    whoToConsult: 'Architecte DPLG/DE & Direction de l’Urbanisme',
+    questionsToConsultNote: '',
+    questionsToValidate: [
+      'La modification de la façade ou de l’aménagement intérieur nécessite-t-elle une Déclaration Préalable (DP) et une Autorisation de Travaux (AT) ?',
+      'Quel classement ERP (catégorie, types d’activité) sera retenu pour un lieu combinant prestation de service (laverie) et consommation sur place ?',
+      'Quelles sont les exigences d’accessibilité PMR et de sécurité incendie applicables à la configuration du local ?',
+    ],
+    verificationStatus: 'Non vérifié — À valider lors de l’étude de faisabilité architecturale',
+    officialSourceUrl: null,
+    lastCheckedDate: null,
+  } as RegulatoryCheckItem,
 ];
 
 export interface ResearchFieldNote {
@@ -168,103 +228,102 @@ export interface ResearchFieldNote {
   title: string;
   hypothesisTested: string;
   methodologyNote: string;
-  status: 'À vérifier sur terrain' | 'En cours d’analyse' | 'Cadre validé';
+  status: 'Question ouverte' | 'En cours de vérification' | 'Source vérifiée';
 }
 
 /**
- * Protocoles de recherche initiaux — aucun établissement ou article fabriqué.
- * Contient uniquement des protocoles méthodologiques prêts à recevoir les relevés réels du fondateur.
+ * Questions de recherche initiales — aucun établissement, article ou chiffre de marché fabriqué.
  */
 export const INITIAL_RESEARCH_NOTES: ResearchFieldNote[] = [
   {
     id: 'res-proto-01',
-    date: '2026-11',
+    date: 'À planifier',
     axis: 'Modèle Laverie',
-    title: 'Protocole de relevé : rotation horaire et panier moyen en laverie urbaine dense',
+    title: 'Question terrain : quelle proportion d’utilisateurs de laverie reste sur place pendant le cycle ?',
     hypothesisTested:
-      'Hypothèse à tester : le temps d’attente moyen de 45 à 60 minutes (lavage + séchage) génère un taux de conversion croisé de 35% vers une offre café/boisson si l’acoustique et l’assise sont soignées.',
+      'Question à documenter : observer la durée réelle d’attente sur place et recueillir l’intérêt des usagers pour une offre de café/boisson pendant le lavage et le séchage.',
     methodologyNote:
-      'Grille d’observation vierge : relever sur place (créneaux 8h-12h, 14h-18h, 19h-22h) le taux d’occupation machines, la proportion d’attente sur place vs départ, et la puissance électrique installée.',
-    status: 'À vérifier sur terrain',
+      'Protocole suggéré : réaliser vos propres comptages horaires et entretiens qualitatifs avant de fixer une hypothèse de vente croisée dans votre business plan.',
+    status: 'Question ouverte',
   },
   {
     id: 'res-proto-02',
-    date: '2026-11',
+    date: 'À planifier',
     axis: 'Listening Bar & Audio',
-    title: 'Protocole acoustique : découplage vibratoire essorage 1000 tr/min et écoute haute-fidélité',
+    title: 'Question technique : comment éviter que les cycles de lavage ne perturbent l’écoute musicale du soir ?',
     hypothesisTested:
-      'Hypothèse à tester : des machines à cuve suspendue posées sur plots élastomères + arrêt programmé des gros essorages après 20h30 permettent une écoute vinyle audiophile sans bruit de fond basse fréquence.',
+      'Question à documenter : évaluer s’il faut restreindre les départs d’essorage en soirée ou prévoir un sas acoustique vitré entre les machines et le salon.',
     methodologyNote:
-      'Consulter deux fabricants de matériel de blanchisserie professionnelle et un acousticien pour chiffrer l’atténuation en dB(C) à 63 Hz et 125 Hz.',
-    status: 'En cours d’analyse',
+      'Protocole suggéré : demander des fiches techniques de niveau sonore aux fabricants de machines professionnelles et consulter un acousticien.',
+    status: 'Question ouverte',
   },
   {
     id: 'res-proto-03',
-    date: '2026-11',
+    date: 'À planifier',
     axis: 'Café de Spécialité',
-    title: 'Protocole d’ergonomie comptoir : bascule de flux Coffee Shop (08h-17h) vers Cocktail Bar (18h-01h)',
+    title: 'Question opérationnelle : comment mutualiser un même comptoir entre service café diurne et bar du soir ?',
     hypothesisTested:
-      'Hypothèse à tester : un comptoir modulaire unique avec double éclairage graduable et occultation visuelle du parc machines en soirée réduit le CAPEX d’agencement de 18%.',
+      'Question à documenter : lister les équipements partagés (filtration d’eau, machine à glace, plonge, réfrigération) et les besoins de rangement lors du changement d’équipe.',
     methodologyNote:
-      'Validation sur plan 1/50e avec ergonome bar : partage des arrivées d’eau filtrée, machine à glace, plonge et stockage.',
-    status: 'Cadre validé',
+      'Protocole suggéré : tester l’implantation sur plan avec un barista et un barman expérimentés.',
+    status: 'Question ouverte',
   },
 ];
 
 export interface PropertyTechnicalSpec {
   id: string;
   criterion: string;
-  targetSpec: string;
-  eliminationThreshold: string;
+  questionToValidate: string;
+  indicativePlaceholderNote: string;
   weightPercent: number;
-  technicalRationale: string;
+  whoToConsult: string;
 }
 
 export const PROPERTY_TECHNICAL_SPECS: PropertyTechnicalSpec[] = [
   {
     id: 'spec-surface',
-    criterion: 'Surface commerciale RDC + Sous-sol exploitable',
-    targetSpec: '110 m² à 150 m² (dont min. 85 m² en RDC de plain-pied)',
-    eliminationThreshold: '< 75 m² en RDC (impossible de séparer laverie, salon d’écoute et bar)',
-    weightPercent: 20,
-    technicalRationale:
-      'Nécessite trois zones distinctes : sas technique laverie (25-30 m²), comptoir café/cocktail (20 m²), salon d’écoute Living Room (45-60 m²) + réserve/stock.',
+    criterion: 'Surface & Répartition des 3 Zones',
+    questionToValidate:
+      'La surface permet-elle de loger distinctement l’espace machines, le comptoir café/bar, les places assises et les réserves ?',
+    indicativePlaceholderNote: 'Repère d’exemple dans l’outil : 85 à 120+ m² (à adapter avec votre architecte)',
+    weightPercent: 15,
+    whoToConsult: 'Architecte / Agenceur',
   },
   {
     id: 'spec-acoustics',
-    criterion: 'Structure du plancher haut & mitoyenneté résidentielle',
-    targetSpec: 'Dalle béton pleine épaisse ou pavillon/bâtiment industriel sur cour',
-    eliminationThreshold: 'Plancher bois ancien non isolable sous chambres d’habitation directe',
+    criterion: 'Structure du Plancher & Mitoyenneté',
+    questionToValidate:
+      'La nature du plancher et des murs mitoyens permet-elle d’isoler les vibrations des machines et la diffusion musicale ?',
+    indicativePlaceholderNote: 'Vérifier la structure réelle du bâtiment avec un bureau d’études acoustiques',
     weightPercent: 25,
-    technicalRationale:
-      'Le combiné basses fréquences audio Hi-Fi + vibrations machines exige un affaiblissement acoustique DnT,A > 65 dB.',
+    whoToConsult: 'Acousticien / Ingénieur structure',
   },
   {
     id: 'spec-power-water',
-    criterion: 'Puissance électrique Triphasée & Évacuation eaux usées',
-    targetSpec: 'Tarif Jaune / Triphasé 36 à 60 kVA + colonne EU diamètre >= 100 mm',
-    eliminationThreshold: 'Monophasé non augmentable ou colonne EU sous-dimensionnée sans pente',
+    criterion: 'Puissance Électrique, Eau & Aéraulique',
+    questionToValidate:
+      'La puissance électrique disponible, la pression d’eau, les évacuations et la ventilation répondent-elles au cahier des charges des équipements ?',
+    indicativePlaceholderNote: 'À chiffrer sur devis avec l’installateur de blanchisserie et Enedis',
     weightPercent: 20,
-    technicalRationale:
-      'Alimentation simultanée de 6-8 laveuses professionnelles, séchoirs pompe à chaleur, machine espresso multi-groupes et climatisation.',
+    whoToConsult: 'Installateur technique / Bureau d’études fluides',
   },
   {
     id: 'spec-facade',
-    criterion: 'Linéaire de façade & Visibilité piétonne quartier',
-    targetSpec: 'Linéaire vitrine >= 7 mètres, rue commerçante ou angle Paris Est/Nord',
-    eliminationThreshold: '< 4 mètres de façade ou galerie intérieure sans accès tardif',
+    criterion: 'Configuration de la Façade & Accès',
+    questionToValidate:
+      'La vitrine et les accès permettent-ils une bonne lisibilité en journée (laverie/café) et un accueil adapté en soirée ?',
+    indicativePlaceholderNote: 'Vérifier également les règles d’accessibilité PMR et de copropriété',
     weightPercent: 15,
-    technicalRationale:
-      'Permet une double lecture extérieure : entrée fonctionnelle laverie/café le jour et atmosphère feutrée Listening Bar le soir.',
+    whoToConsult: 'Architecte ERP',
   },
   {
     id: 'spec-lease',
-    criterion: 'Destination du Bail Commercial 3/6/9 & Règlement de Copropriété',
-    targetSpec: 'Bail autorisant Laverie + Restauration légère + Bar / Débit de boissons (ou tous commerces)',
-    eliminationThreshold: 'Clause d’interdiction formelle de nuisances/débit de boissons dans le règlement de copropriété',
-    weightPercent: 20,
-    technicalRationale:
-      'Sécurisation juridique indispensable avant tout engagement de frais d’architecte ou d’achat de Licence IV.',
+    criterion: 'Destination du Bail Commercial & Règlement de Copropriété',
+    questionToValidate:
+      'Le bail commercial et le règlement de copropriété autorisent-ils explicitement les trois activités envisagées (laverie, café, bar) ?',
+    indicativePlaceholderNote: 'Point juridique à faire auditer par un avocat avant toute offre engageante',
+    weightPercent: 25,
+    whoToConsult: 'Avocat en baux commerciaux',
   },
 ];
 
@@ -285,33 +344,18 @@ export interface PropertyCandidateEvaluation {
 
 export const INITIAL_PROPERTY_EVALUATIONS: PropertyCandidateEvaluation[] = [
   {
-    id: 'prop-template-a',
-    label: 'Gabarit Cible A — Local d’angle RDC sur dalle béton (Folie-Méricourt / Popincourt, 11e)',
-    targetZone: 'Paris 11e (Cible prioritaire)',
-    surfaceSqm: 125,
-    monthlyRentExclCharges: 4600,
-    leaseAssignmentCost: 95000,
+    id: 'prop-template-neutral',
+    label: 'Fiche Vierge d’Exemple (Placeholder Fictif — Aucune Annonce Réelle)',
+    targetZone: 'Quartier à définir par le fondateur',
+    surfaceSqm: 110,
+    monthlyRentExclCharges: 3500,
+    leaseAssignmentCost: 40000,
     hasConcreteSlab: true,
     hasThreePhasePower: true,
     hasBarLicenseAllowed: true,
     hasAdequateFacade: true,
     notes:
-      'Gabarit de référence hypothétique servant d’étalon au business plan. Remplacer ou dupliquer lors des visites réelles.',
-    isHypotheticalTemplate: true,
-  },
-  {
-    id: 'prop-template-b',
-    label: 'Gabarit Cible B — Ancien atelier sur rue (Canal Saint-Martin / Grange-aux-Belles, 10e)',
-    targetZone: 'Paris 10e (Cible secondaire)',
-    surfaceSqm: 110,
-    monthlyRentExclCharges: 4200,
-    leaseAssignmentCost: 80000,
-    hasConcreteSlab: true,
-    hasThreePhasePower: true,
-    hasBarLicenseAllowed: false,
-    hasAdequateFacade: true,
-    notes:
-      'Gabarit alternatif hypothétique illustrant l’impact d’une réserve sur la clause débit de boissons en copropriété.',
+      'Valeurs fictives neutres servant uniquement à démontrer le fonctionnement de la grille de pointage. Remplacez-les par vos visites réelles.',
     isHypotheticalTemplate: true,
   },
 ];
@@ -323,52 +367,55 @@ export interface IdeaLabConceptPillar {
   primaryRevenueDrivers: string[];
   acousticAtmosphere: string;
   operationalSynergy: string;
-  targetMarginPercent: number;
+  openQuestionToValidate: string;
 }
 
 export const IDEA_LAB_DAY_NIGHT_MODES: IdeaLabConceptPillar[] = [
   {
     id: 'mode-morning',
-    timeSlot: '07h30 – 14h00',
-    modeName: 'Séquence I — Laverie Urbaine & Coffee Shop de Spécialité',
+    timeSlot: 'Matin (Plage indicative)',
+    modeName: 'Séquence I — Laverie & Coffee Shop',
     primaryRevenueDrivers: [
-      'Cycles lavage & séchage haute efficacité (paiement sans contact / app)',
-      'Espresso de spécialité, filtre batch brew, viennoiseries artisanales',
-      'Postes de travail calmes & table d’hôte pendant le cycle de 45 min',
+      'Service de lavage et séchage en libre-service assisté',
+      'Boissons chaudes (espresso, filtre) et offre matinale simple sans cuisson lourde',
+      'Espace d’attente confortable avec tables et prises électriques',
     ],
-    acousticAtmosphere: 'Écoute feutrée 62–65 dB(A) : ambient, jazz acoustique, folk sur enceintes pavillonnaires.',
+    acousticAtmosphere: 'Ambiance sonore calme adaptée à la lecture et au travail matinal.',
     operationalSynergy:
-      'Un seul barista-opérateur supervise l’accueil café et l’assistance laverie en heures creuses matinales.',
-    targetMarginPercent: 74,
+      'Hypothèse d’organisation : étudier la supervision conjointe de l’accueil café et de l’espace laverie.',
+    openQuestionToValidate:
+      'À valider : amplitude horaire exacte d’ouverture matinale et dimensionnement du personnel.',
   },
   {
     id: 'mode-afternoon',
-    timeSlot: '14h00 – 18h30',
-    modeName: 'Séquence II — Salon de Quartier, Coworking Doux & Service Linge',
+    timeSlot: 'Après-midi (Plage indicative)',
+    modeName: 'Séquence II — Salon de Quartier & Cycles Linge',
     primaryRevenueDrivers: [
-      'Heures pleines laverie étudiants/télétravailleurs & abonnements lavage',
-      'Boissons froides, infusions maison, pâtisseries & écoute d’albums intégraux',
-      'Casiers de dépôt / retrait linge plié (service additionnel à tester)',
+      'Rotation continue de la laverie sur les créneaux d’après-midi',
+      'Boissons fraîches, infusions et écoute musicale de salon',
+      'Préparation de la mise en place pour le service du soir',
     ],
-    acousticAtmosphere: 'Sélections curatées 65–68 dB(A) : soul, dub chaleureux, électronique organique.',
+    acousticAtmosphere: 'Sélection musicale modérée valorisant le confort acoustique de la salle.',
     operationalSynergy:
-      'Monétisation des heures traditionnellement creuses d’un bar grâce à la récurrence incompressible du besoin de laverie.',
-    targetMarginPercent: 78,
+      'Hypothèse d’organisation : utiliser la fréquentation régulière de la laverie pour animer le lieu l’après-midi.',
+    openQuestionToValidate:
+      'À valider : pertinence économique d’services complémentaires (ex. dépôt/pliage) selon la demande locale.',
   },
   {
     id: 'mode-evening',
-    timeSlot: '18h30 – 01h00',
-    modeName: 'Séquence III — Listening Bar Audiophile & Cocktails Créatifs',
+    timeSlot: 'Soirée (Plage indicative)',
+    modeName: 'Séquence III — Listening Bar & Cocktails',
     primaryRevenueDrivers: [
-      'Cocktails signatures basés sur infusions café/botaniques, vins vivants & sans-alcool',
-      'Assiettes de partage froides/tièdes sans extraction lourde de friture',
-      'Dernier départ de cycle d’essorage limité à 20h30 ; occultation douce par rideaux acoustiques lourds',
+      'Carte de cocktails, boissons avec et sans alcool, petites assiettes sans friture',
+      'Programmation d’écoute haute-fidélité (vinyles / sélection musicale soignée)',
+      'Gestion de la fin des cycles de laverie pour préserver le calme acoustique en soirée',
     ],
     acousticAtmosphere:
-      'Écoute haute-fidélité 75–82 dB(A) maîtrisée : sélecteurs vinyles, acoustique boisée absorbante, zéro réverbération agressive.',
+      'Écoute musicale dédiée, dans le strict respect des limites acoustiques qui seront définies par l’étude technique.',
     operationalSynergy:
-      'Transition d’éclairage en 15 minutes ; le salon d’attente diurne devient la salle d’écoute nocturne à forte valeur ajoutée.',
-    targetMarginPercent: 76,
+      'Hypothèse d’organisation : transformation visuelle et lumineuse de l’espace d’attente en salon d’écoute.',
+    openQuestionToValidate:
+      'À valider : horaire du dernier cycle de lavage/essorage compatible avec l’ambiance du soir.',
   },
 ];
 
@@ -386,42 +433,32 @@ export const INITIAL_FOUNDER_IDEAS: FounderIdeaNote[] = [
   {
     id: 'idea-01',
     category: 'Design & Acoustique',
-    title: 'Cloison vitrée acoustique double feuilleté + rideau velours lourd 650g/m²',
+    title: 'Séparation vitrée et rideau occultant entre l’espace machines et le salon',
     description:
-      'En journée, le parc de machines en inox/bois reste visible à travers un vitrage acoustique Stadip Silence. À 19h30, un rideau acoustique lourd coulisse pour transformer le mur en surface absorbante chaude.',
+      'Piste architecturale à étudier avec un acousticien : garder une transparence visuelle en journée et occulter la zone technique le soir.',
     impactScore: 5,
     feasibilityScore: 4,
-    status: 'Retenu MVP',
+    status: 'Hypothèse',
   },
   {
     id: 'idea-02',
     category: 'Expérience Client',
-    title: 'Jeton "Cycle & Café" intégré au terminal de paiement laverie',
+    title: 'Formule couplée "Cycle de lavage + Boisson au comptoir"',
     description:
-      'Lors du lancement d’un cycle lavage + séchage, l’utilisateur peut ajouter pour +2,50 € un café filtre ou espresso servi au comptoir, avec notification discrète de fin de cycle à sa table.',
-    impactScore: 5,
-    feasibilityScore: 5,
-    status: 'Retenu MVP',
-  },
-  {
-    id: 'idea-03',
-    category: 'Carte & Boissons',
-    title: 'Cocktails clarifiés & sirops d’épices préparés avec la vapeur/filtration du bar café',
-    description:
-      'Mutualisation totale du matériel entre barista du matin et barman du soir : eau osmosée reminéralisée, marc de café valorisé en liqueur maison et infusions botaniques.',
+      'Piste commerciale à tester : proposer une offre combinée simple aux clients de la laverie et un signal discret de fin de cycle.',
     impactScore: 4,
     feasibilityScore: 5,
     status: 'À prototyper',
   },
   {
-    id: 'idea-04',
-    category: 'Modèle Économique',
-    title: 'Séchoirs à pompe à chaleur (circuit fermé sans gaine d’extraction en façade)',
+    id: 'idea-03',
+    category: 'Carte & Boissons',
+    title: 'Mutualisation des équipements de filtration et de glace entre café et bar',
     description:
-      'Élimine le besoin de créer un conduit d’évacuation d’air humide en façade ou en toiture de copropriété parisienne, tout en divisant par deux la consommation électrique.',
-    impactScore: 5,
+      'Piste d’agencement : concevoir un linéaire de comptoir unique servant au barista en journée et au barman en soirée.',
+    impactScore: 4,
     feasibilityScore: 4,
-    status: 'Retenu MVP',
+    status: 'Hypothèse',
   },
 ];
 
@@ -437,68 +474,68 @@ export interface RoadmapMilestone {
 
 export const INITIAL_ROADMAP_MILESTONES: RoadmapMilestone[] = [
   {
-    id: 'rm-q4-2026',
-    quarter: 'T4 2026',
-    phaseTitle: 'Phase 1 — Cadrage Financier, Thèse Conceptuelle & Cahier des Charges',
-    targetDate: 'Nov. – Déc. 2026',
+    id: 'rm-phase-1',
+    quarter: 'Étape 1',
+    phaseTitle: 'Phase 1 — Cadrage du Concept & Premières Simulations (Prototype MVP)',
+    targetDate: 'Fin 2026 (Indicatif)',
     deliverables: [
-      'Espace fondateur Project Living Room & simulateurs financiers opérationnels',
-      'Définition du cahier des charges acoustique et électrique (triphasé / dalle béton)',
-      'Validation de la trajectoire d’épargne fondateurs sur 13 mois',
+      'Mise en place des simulateurs financiers avec valeurs d’exemple modifiables',
+      'Inventaire des questions juridiques, acoustiques et techniques à poser aux experts',
+      'Définition des premiers critères de recherche de local',
     ],
-    decisionGate: 'Gate 1 : Validation du budget cible CAPEX (~500 k€) et d’un apport quasi-fonds propres >= 28%.',
+    decisionGate: 'Jalon 1 : Remplacer les valeurs d’exemple par de premiers devis et conseils professionnels vérifiés.',
     status: 'En cours',
   },
   {
-    id: 'rm-q1-2027',
-    quarter: 'T1 2027',
-    phaseTitle: 'Phase 2 — Prospection Active Local (Paris 10e/11e/18e/19e/20e) & Sourcing Licence IV',
-    targetDate: 'Janv. – Mars 2027',
+    id: 'rm-phase-2',
+    quarter: 'Étape 2',
+    phaseTitle: 'Phase 2 — Consultations Professionnelles & Prospection Immobilière',
+    targetDate: 'S1 2027 (Indicatif)',
     deliverables: [
-      'Visites qualifiées avec grille de compatibilité technique (objectif 15-20 locaux inspectés)',
-      'Pré-consultation d’un bureau d’études acoustiques et d’un architecte ERP',
-      'Identification d’une Licence IV transférable hors périmètre protégé',
+      'Consultation d’un avocat spécialisé (bail commercial, licence de débit de boissons)',
+      'Visites de locaux avec un architecte et un bureau d’études acoustiques',
+      'Chiffrage réel des équipements (laverie, café/bar, audio) auprès de fournisseurs',
     ],
-    decisionGate: 'Gate 2 : Offre acceptée sous conditions suspensives (EINS acoustique, Licence IV, prêt bancaire).',
+    decisionGate: 'Jalon 2 : Validation technique, juridique et financière d’un local réel sous conditions suspensives.',
     status: 'À venir',
   },
   {
-    id: 'rm-q2-2027',
-    quarter: 'T2 2027',
-    phaseTitle: 'Phase 3 — Structuration Juridique, Dossier Bancaire & Autorisation de Travaux',
-    targetDate: 'Avril – Juin 2027',
+    id: 'rm-phase-3',
+    quarter: 'Étape 3',
+    phaseTitle: 'Phase 3 — Structuration Financière, Dossiers Administratifs & Bail',
+    targetDate: 'Mi-2027 (Indicatif)',
     deliverables: [
-      'Constitution de la société d’exploitation (SAS) & pacte d’associés',
-      'Bouclage financement : Prêt d’honneur (Initiative Paris / Réseau Entreprendre) + Crédit bancaire 7 ans',
-      'Dépôt de l’Autorisation de Travaux (AT/ERP 5e catégorie) et demande de mutation Licence IV',
+      'Établissement d’un prévisionnel financier certifié avec un expert-comptable',
+      'Négociation bancaire et demandes de financements complémentaires',
+      'Dépôt des autorisations administratives et d’urbanisme requises',
     ],
-    decisionGate: 'Gate 3 : Obtention des accords bancaires fermes et purge des conditions suspensives du bail.',
+    decisionGate: 'Jalon 3 : Obtention des financements et purge des conditions suspensives.',
     status: 'À venir',
   },
   {
-    id: 'rm-q3-2027',
-    quarter: 'T3 2027',
-    phaseTitle: 'Phase 4 — Chantier d’Aménagement, Boîte Acoustique & Réseaux Techniques',
-    targetDate: 'Juil. – Oct. 2027',
+    id: 'rm-phase-4',
+    quarter: 'Étape 4',
+    phaseTitle: 'Phase 4 — Travaux d’Aménagement, Installation Technique & Acoustique',
+    targetDate: 'Automne 2027 (Indicatif)',
     deliverables: [
-      'Désamiantage/curage éventuel, coulage socles antivibratiles laverie et plomberie',
-      'Traitement acoustique plafond/murs salon d’écoute et menuiseries sur-mesure',
-      'Livraison parc machines laverie connectée, système Hi-Fi et équipement bar/espresso',
+      'Exécution des travaux d’aménagement, d’isolation acoustique et de raccordements',
+      'Installation et test des machines de laverie, du comptoir café/bar et du système audio',
+      'Vérifications réglementaires et réceptions techniques avant ouverture',
     ],
-    decisionGate: 'Gate 4 : Réception des travaux et validation des mesures acoustiques EINS + limiteur scellé.',
+    decisionGate: 'Jalon 4 : Réception conforme du chantier et validation des essais techniques.',
     status: 'À venir',
   },
   {
-    id: 'rm-q4-2027',
-    quarter: 'T4 2027',
-    phaseTitle: 'Phase 5 — Rodage Opérationnel, Soft Opening & Ouverture Officielle',
-    targetDate: 'Nov. – Décembre 2027',
+    id: 'rm-phase-5',
+    quarter: 'Étape 5',
+    phaseTitle: 'Phase 5 — Préparation Opérationnelle & Ouverture Cible',
+    targetDate: 'Décembre 2027 (Cible indicative)',
     deliverables: [
-      'Recrutement et formation équipe polyvalente (Barista / Bartender / Hospitalité)',
-      'Calibration finale du système sonore, tests de charge machines et parcours paiement',
-      'Semaine de Soft Opening privé puis ouverture officielle Project Living Room',
+      'Mise en place des opérations, fournisseurs et équipe',
+      'Phase de rodage (tests en conditions réelles)',
+      'Ouverture cible de Project Living Room',
     ],
-    decisionGate: 'Gate 5 : Ouverture Décembre 2027 avec trésorerie de sécurité BFR intacte.',
+    decisionGate: 'Jalon 5 : Lancement opérationnel.',
     status: 'À venir',
   },
 ];

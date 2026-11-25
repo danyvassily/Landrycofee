@@ -1,22 +1,23 @@
 /**
- * Moteur de calcul financier — Project Living Room (Paris, Cible Décembre 2027)
- * Toutes les valeurs par défaut sont des hypothèses de travail modifiables (HYPOTHÉTIQUES).
+ * Moteur de calcul financier — Project Living Room (Prototype MVP Local-First)
+ * Toutes les valeurs en entrée sont des exemples fictifs neutres (placeholders) ou des saisies utilisateur.
+ * Aucun résultat ne constitue une prévision financière validée ni un conseil bancaire ou juridique.
  */
 
 export interface SavingsAssumptions {
-  /** Épargne déjà mobilisable au démarrage de la simulation (€) */
+  /** Capital initial d'exemple mobilisable au démarrage de la simulation (€) */
   initialSavings: number;
-  /** Versement mensuel combiné des fondateurs (€/mois) */
+  /** Versement mensuel d'exemple (€/mois) — ne jamais encoder de salaire/loyer personnel réel */
   monthlyContribution: number;
-  /** Horizon d'épargne avant bouclage financier (mois) */
+  /** Horizon de simulation en mois */
   monthsToTarget: number;
-  /** Taux de rendement annuel net sur trésorerie placée (%) */
+  /** Taux de rendement annuel net hypothétique (%) */
   annualYieldPercent: number;
-  /** Apports exceptionnels ponctuels prévus sur la période (€) */
+  /** Apport exceptionnel ponctuel d'exemple (€) */
   exceptionalContribution: number;
   /** Mois de versement de l'apport exceptionnel (1..monthsToTarget) */
   exceptionalContributionMonth: number;
-  /** Objectif cible d'apport personnel fondateurs (€) */
+  /** Cible illustrative d'apport à tester (€) */
   targetFounderEquity: number;
 }
 
@@ -54,42 +55,42 @@ export interface SavingsSimulationResult {
 }
 
 export interface ProjectCapexAssumptions {
-  /** Droit au bail / indemnité de départ / acquisition fonds (€) */
+  /** Droit au bail / acquisition (montant d'exemple modifiable, €) */
   leaseAcquisition: number;
-  /** Travaux d'aménagement, isolation acoustique haute performance & CVC (€) */
+  /** Travaux d'aménagement & acoustique (montant d'exemple modifiable, €) */
   renovationAcoustics: number;
-  /** Parc machines laverie professionnelle connectée & pompe à chaleur (€) */
+  /** Équipement laverie (montant d'exemple modifiable, €) */
   laundryEquipment: number;
-  /** Équipement coffee shop (espresso, filtration) & station cocktail (€) */
+  /** Équipement café & bar (montant d'exemple modifiable, €) */
   coffeeBarEquipment: number;
-  /** Système haute-fidélité audiophile (enceintes, amplification, vinyles) (€) */
+  /** Système audio (montant d'exemple modifiable, €) */
   hiFiSoundSystem: number;
-  /** Licence IV, honoraires architecte, acousticiens & frais juridiques (€) */
+  /** Frais d'études, licences & conseil (montant d'exemple modifiable, €) */
   legalLicensingArch: number;
-  /** Dépôt de garantie, stock initial & trésorerie de lancement (BFR) (€) */
+  /** Trésorerie de démarrage & BFR (montant d'exemple modifiable, €) */
   workingCapitalReserve: number;
 }
 
 export interface ProjectFinancingAssumptions {
   /** Utiliser l'apport projeté par le simulateur d'épargne (scénario central) */
   syncFounderEquityFromSavings: boolean;
-  /** Apport personnel fondateurs manuel si non synchronisé (€) */
+  /** Apport manuel d'exemple si non synchronisé (€) */
   manualFounderEquity: number;
-  /** Prêt d'honneur à taux zéro / BPI / Réseau Entreprendre (€) */
+  /** Prêt à taux zéro / prêt d'honneur d'exemple (€) */
   honorLoanZeroRate: number;
-  /** Subventions transition écologique / aides acoustiques & commerce (€) */
+  /** Subventions ou aides éventuelles (€) */
   grantsAndSubsidies: number;
-  /** Montant de l'emprunt bancaire professionnel sollicité (€) */
+  /** Montant d'emprunt bancaire simulé (€) */
   bankLoanPrincipal: number;
-  /** Taux d'intérêt annuel nominal du crédit bancaire (%) */
+  /** Taux d'intérêt annuel nominal simulé (%) */
   annualInterestRatePercent: number;
-  /** Taux annuel d'assurance emprunteur sur capital initial (%) */
+  /** Taux annuel d'assurance emprunteur simulé sur capital initial (%) */
   annualInsuranceRatePercent: number;
-  /** Durée totale du prêt bancaire (années, ex: 7 ans) */
+  /** Durée totale de l'emprunt simulé (années) */
   loanDurationYears: number;
   /** Différé d'amortissement du capital en mois (0 à 24 mois) */
   gracePeriodMonths: number;
-  /** Excédent Brut d'Exploitation (EBE / EBITDA) mensuel cible en croisière (€) */
+  /** EBE / EBITDA mensuel hypothétique optionnel (0 € par défaut — aucune prévision intégrée) */
   hypotheticalMonthlyEbitda: number;
 }
 
@@ -125,19 +126,20 @@ export interface FundingAndLoanResult {
     sharePercent: number;
   }[];
   effectiveFounderEquity: number;
-  totalQuasiEquity: number; // Apport + Prêt d'honneur + Subventions
+  totalQuasiEquity: number;
   equityRatioPercent: number;
   totalAvailableFunding: number;
   /**
    * Écart de financement (Funding Gap) :
-   * > 0 : Besoin non couvert (déficit à combler)
-   * = 0 : Équilibre exact
-   * < 0 : Excédent / coussin de sécurité supplémentaire
+   * > 0 : Besoin non couvert par les ressources saisies
+   * = 0 : Équilibre exact emplois / ressources
+   * < 0 : Excédent des ressources saisies sur les emplois
    */
   fundingGap: number;
-  /** Solde net (Ressources - Emplois) : positif = coussin excédentaire, négatif = besoin non financé */
+  /** Solde net (Ressources - Emplois) */
   netFundingBalance: number;
   isFullyFunded: boolean;
+  /** Indicateur purement illustratif de bouclage (non représentatif d'un accord bancaire) */
   bankReadinessStatus: 'solide' | 'limite' | 'insuffisant';
   loanSummary: {
     principal: number;
@@ -178,7 +180,7 @@ export function buildSavingsSchedule(
   monthlyMultiplier: number = 1,
   id: 'prudent' | 'central' | 'ambitieux' = 'central',
   name: string = 'Scénario Central',
-  description: string = 'Effort mensuel nominal des fondateurs'
+  description: string = 'Versement mensuel d’exemple à 100 %'
 ): SavingsScenarioSummary {
   const initialSavings = clampNonNegative(assumptions.initialSavings);
   const baseMonthly = clampNonNegative(assumptions.monthlyContribution);
@@ -200,7 +202,6 @@ export function buildSavingsSchedule(
     const startingBalance = currentBalance;
     const regularContribution = effectiveMonthlyContribution;
     const exceptionalAddition = m === exceptionalMonth ? exceptional : 0;
-    // Intérêts calculés sur le solde de début de mois
     const interestEarned = roundCents(startingBalance * monthlyRate);
     const endingBalance = roundCents(
       startingBalance + regularContribution + exceptionalAddition + interestEarned
@@ -246,7 +247,7 @@ export function buildSavingsSchedule(
 }
 
 /**
- * Calcule l'effort d'épargne mensuel requis pour atteindre exactement `targetFounderEquity`
+ * Calcule le versement mensuel requis pour atteindre exactement `targetFounderEquity`
  * à l'horizon `monthsToTarget`.
  */
 export function calculateRequiredMonthlySavings(assumptions: SavingsAssumptions): number {
@@ -258,7 +259,6 @@ export function calculateRequiredMonthlySavings(assumptions: SavingsAssumptions)
   const exceptionalMonth = Math.max(1, Math.min(months, Math.round(assumptions.exceptionalContributionMonth || 1)));
   const targetEquity = clampNonNegative(assumptions.targetFounderEquity);
 
-  // Valeur future du capital initial et de l'apport exceptionnel sans versements mensuels
   const compoundInitial = initialSavings * Math.pow(1 + monthlyRate, months);
   const monthsRemainingAfterExceptional = months - exceptionalMonth;
   const compoundExceptional =
@@ -273,35 +273,34 @@ export function calculateRequiredMonthlySavings(assumptions: SavingsAssumptions)
     return roundCents(remainingToFund / months);
   }
 
-  // Annuité de fin de période : FV = PMT * ((1 + r)^n - 1) / r
   const annuityFactor = (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
   return roundCents(remainingToFund / annuityFactor);
 }
 
 /**
- * Exécute la simulation complète d'épargne avec 3 scénarios comparatifs (Prudent, Central, Ambitieux)
+ * Exécute la simulation complète d'épargne avec 3 variantes (-20 %, 100 %, +25 %)
  */
 export function simulateSavingsScenarios(assumptions: SavingsAssumptions): SavingsSimulationResult {
   const prudent = buildSavingsSchedule(
     assumptions,
     0.8,
     'prudent',
-    'Scénario Prudent (-20%)',
-    'Marge de sécurité en cas d’imprévu personnel durant la phase de recherche de local'
+    'Variante Basse (-20 %)',
+    'Simulation avec un versement mensuel réduit de 20 %'
   );
   const central = buildSavingsSchedule(
     assumptions,
     1.0,
     'central',
-    'Scénario Central (Nominal)',
-    'Trajectoire d’épargne mensuelle de référence jusqu’à décembre 2027'
+    'Variante Centrale (100 %)',
+    'Simulation basée sur le versement mensuel saisi'
   );
   const ambitieux = buildSavingsSchedule(
     assumptions,
     1.25,
     'ambitieux',
-    'Scénario Accéléré (+25%)',
-    'Effort d’épargne renforcé pour maximiser le ratio de fonds propres devant les banques'
+    'Variante Haute (+25 %)',
+    'Simulation avec un versement mensuel majoré de 25 %'
   );
 
   const requiredMonthlyForTarget = calculateRequiredMonthlySavings(assumptions);
@@ -325,37 +324,37 @@ export function simulateProjectFundingAndLoan(
   const rawItems: { key: keyof ProjectCapexAssumptions; label: string; amount: number }[] = [
     {
       key: 'leaseAcquisition',
-      label: 'Droit au bail / Indemnité & Acquisition',
+      label: 'Droit au bail / Indemnité (Placeholder)',
       amount: clampNonNegative(capex.leaseAcquisition),
     },
     {
       key: 'renovationAcoustics',
-      label: 'Travaux, Acoustique & Extraction CVC',
+      label: 'Travaux, Acoustique & CVC (Placeholder)',
       amount: clampNonNegative(capex.renovationAcoustics),
     },
     {
       key: 'laundryEquipment',
-      label: 'Machines Laverie Pro & Monétique',
+      label: 'Équipement Laverie (Placeholder)',
       amount: clampNonNegative(capex.laundryEquipment),
     },
     {
       key: 'coffeeBarEquipment',
-      label: 'Équipement Coffee Shop & Cocktail Bar',
+      label: 'Équipement Café & Bar (Placeholder)',
       amount: clampNonNegative(capex.coffeeBarEquipment),
     },
     {
       key: 'hiFiSoundSystem',
-      label: 'Système Audio Hi-Fi & Cabine Vinyle',
+      label: 'Système Audio & Écoute (Placeholder)',
       amount: clampNonNegative(capex.hiFiSoundSystem),
     },
     {
       key: 'legalLicensingArch',
-      label: 'Licence IV, Architecte & Frais Juridiques',
+      label: 'Honoraires, Études & Licences (Placeholder)',
       amount: clampNonNegative(capex.legalLicensingArch),
     },
     {
       key: 'workingCapitalReserve',
-      label: 'Dépôt de Garantie, Stock & Trésorerie BFR',
+      label: 'Dépôt de Garantie, Stock & BFR (Placeholder)',
       amount: clampNonNegative(capex.workingCapitalReserve),
     },
   ];
@@ -380,7 +379,6 @@ export function simulateProjectFundingAndLoan(
   const principal = roundCents(clampNonNegative(financing.bankLoanPrincipal));
   const totalAvailableFunding = roundCents(totalQuasiEquity + principal);
 
-  // Funding gap > 0 signifie un déficit de financement ; <= 0 signifie que le projet est intégralement financé
   const fundingGap = roundCents(totalProjectCost - totalAvailableFunding);
   const netFundingBalance = roundCents(totalAvailableFunding - totalProjectCost);
   const isFullyFunded = fundingGap <= 0;
@@ -388,6 +386,7 @@ export function simulateProjectFundingAndLoan(
   const equityRatioPercent =
     totalProjectCost > 0 ? roundCents((totalQuasiEquity / totalProjectCost) * 100) : 0;
 
+  // Repère purement illustratif (à valider auprès d'un courtier / banquier)
   let bankReadinessStatus: 'solide' | 'limite' | 'insuffisant' = 'insuffisant';
   if (isFullyFunded && equityRatioPercent >= 28) {
     bankReadinessStatus = 'solide';
@@ -395,7 +394,6 @@ export function simulateProjectFundingAndLoan(
     bankReadinessStatus = 'limite';
   }
 
-  // Paramètres du prêt bancaire
   const durationYears = Math.max(1, Math.min(25, Math.round(clampNonNegative(financing.loanDurationYears) || 7)));
   const totalMonths = durationYears * 12;
   const gracePeriodMonths = Math.max(
@@ -410,10 +408,8 @@ export function simulateProjectFundingAndLoan(
   const annualInsuranceRate = clampNonNegative(financing.annualInsuranceRatePercent) / 100;
   const monthlyInsurance = roundCents((principal * annualInsuranceRate) / 12);
 
-  // Mensualité pendant la franchise partielle (intérêts seuls + assurance)
   const monthlyPaymentGraceExclInsurance = roundCents(principal * monthlyRate);
 
-  // Mensualité constante en phase d'amortissement
   let monthlyPaymentAmortizingExclInsurance = 0;
   if (principal > 0 && amortizingMonths > 0) {
     if (monthlyRate === 0) {
@@ -444,7 +440,6 @@ export function simulateProjectFundingAndLoan(
       principalPaid = 0;
       scheduledPaymentExclInsurance = interestPaid;
     } else if (m === totalMonths) {
-      // Dernière échéance : ajuste au centime près pour solder exactement le capital
       principalPaid = roundCents(beginningBalance);
       scheduledPaymentExclInsurance = roundCents(principalPaid + interestPaid);
     } else {
@@ -474,7 +469,6 @@ export function simulateProjectFundingAndLoan(
     });
   }
 
-  // Agrégation annuelle
   const yearlySchedule: AmortizationYearRow[] = [];
   for (let y = 1; y <= durationYears; y++) {
     const rows = monthlySchedule.filter((r) => r.year === y);
@@ -501,7 +495,7 @@ export function simulateProjectFundingAndLoan(
     totalMonthlyDebtServiceAmortizing > 0
       ? roundCents(monthlyEbitda / totalMonthlyDebtServiceAmortizing)
       : 0;
-  // Seuil bancaire prudent : DSCR >= 1.30x
+  // Repère illustratif à 1.30x (non normatif)
   const requiredMonthlyEbitdaForSafeDscr = roundCents(totalMonthlyDebtServiceAmortizing * 1.3);
 
   return {
@@ -552,7 +546,8 @@ export interface PropertyScoreResult {
 }
 
 /**
- * Évalue la compatibilité technique d'un local parisien candidat sur 100 points
+ * Grille de pointage indicative (/100) pour comparer des locaux lors des visites.
+ * Il s'agit d'une pondération d'aide à la réflexion et non d'une validation technique ou juridique.
  */
 export function calculatePropertyCompatibilityScore(
   candidate: PropertyScoreInput
@@ -560,45 +555,39 @@ export function calculatePropertyCompatibilityScore(
   let score = 0;
   const blockers: string[] = [];
 
-  // 1. Dalle béton & acoustique (25 pts)
   if (candidate.hasConcreteSlab) {
     score += 25;
   } else {
-    blockers.push('Absence de dalle béton (risque acoustique majeur EINS / vibrations essorage)');
+    blockers.push('Question à vérifier avec un acousticien : structure du plancher et isolation vibratoire/sonore');
   }
 
-  // 2. Destination bail & Licence IV / Bar autorisé (25 pts)
   if (candidate.hasBarLicenseAllowed) {
     score += 25;
   } else {
-    blockers.push('Bail ou copropriété bloquant l’activité Bar / Licence IV');
+    blockers.push('Question à vérifier avec un avocat/syndic : destination du bail, règlement de copropriété et licence');
   }
 
-  // 3. Alimentation triphasée & évacuations (20 pts)
   if (candidate.hasThreePhasePower) {
     score += 20;
   } else {
-    blockers.push('Alimentation triphasée 36-60 kVA absente ou à raccorder');
+    blockers.push('Question à vérifier avec un installateur : puissance électrique raccordable et évacuations');
   }
 
-  // 4. Surface exploitable (15 pts)
   if (candidate.surfaceSqm >= 110) {
     score += 15;
   } else if (candidate.surfaceSqm >= 85) {
     score += 8;
   } else {
-    blockers.push('Surface inférieure à 85 m² (cloisonnement des 3 activités compromis)');
+    blockers.push('Question à vérifier avec un architecte : faisabilité de l’agencement des 3 espaces sur cette surface');
   }
 
-  // 5. Linéaire vitrine & visibilité (15 pts)
   if (candidate.hasAdequateFacade) {
     score += 15;
   }
 
-  // Malus si loyer mensuel HC excessif (> 5 500 € HC/mois pour le modèle cible)
   if (candidate.monthlyRentExclCharges > 6000) {
     score = Math.max(0, score - 15);
-    blockers.push('Loyer mensuel HC > 6 000 € pesant sur le point mort d’exploitation');
+    blockers.push('Point de vigilance financier : loyer saisi élevé à confronter à votre prévisionnel comptable');
   } else if (candidate.monthlyRentExclCharges > 5200) {
     score = Math.max(0, score - 7);
   }
@@ -616,4 +605,3 @@ export function calculatePropertyCompatibilityScore(
     blockers,
   };
 }
-

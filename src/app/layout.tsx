@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Project Living Room — Espace Fondateur Privé | Paris Déc. 2027',
+  title: 'Project Living Room — Prototype MVP Local-First | Paris Cible Déc. 2027',
   description:
-    'Cockpit fondateur privé pour Project Living Room : Laverie urbaine, Coffee Shop de spécialité & Listening/Cocktail Bar à Paris (cible Décembre 2027).',
+    'Outil de travail local-first (prototype MVP sans authentification active) pour Project Living Room : simulateurs financiers à valeurs d’exemple neutres et listes de questions à vérifier.',
   robots: {
     index: false,
     follow: false,

@@ -1,69 +1,47 @@
-# Project Living Room — Espace Fondateur Privé (MVP)
+# Project Living Room — Prototype MVP Local-First
 
-**Project Living Room** est le cockpit de travail privé des fondateurs pour la création d’un tiers-lieu hybride à **Paris (horizon d’ouverture : Décembre 2027)** réunissant sous un même toit :
+**Project Living Room** est un outil de travail local-first (prototype MVP) destiné à préparer un projet de lieu hybride à **Paris (horizon indicatif : Décembre 2027)** combinant :
 
-1. **Une laverie urbaine haute performance** (flux récurrent matinal et diurne, équipements connectés et séchoirs à pompe à chaleur) ;
-2. **Un coffee shop de spécialité** (valorisation des 45 à 60 minutes de cycle de lavage/séchage en journée) ;
-3. **Un bar à cocktails & listening bar audiophile** (bascule acoustique et lumineuse en soirée dès 18h30).
+1. **Une laverie de quartier** ;
+2. **Un coffee shop** ;
+3. **Un salon d’écoute musicale & bar du soir (Listening & Cocktail Bar)**.
 
 ---
 
-## Principes Fondateurs de ce MVP
+## Statut Honnête du MVP & Avertissements Importants
 
-- **Produit French-First & Éditorial** : Interface sobre, chaleureuse et lisible, pensée comme un outil de pilotage exécutif sur ordinateur comme sur mobile.
-- **Simulateurs Financiers Réels & Déterministes** :
-  - **Simulateur I — Épargne & Apport Fondateurs** : projection mois par mois avec intérêts composés, apports exceptionnels, calcul de l’effort mensuel requis pour atteindre la cible d’apport, et comparaison instantanée de 3 scénarios (*Prudent -20 %*, *Central Nominal*, *Accéléré +25 %*).
-  - **Simulateur II — Plan de Financement, Écart (Funding Gap) & Amortissement Bancaire** : ventilation modifiable des 7 postes de CAPEX/BFR, synchronisation automatique ou manuelle avec l’apport du Simulateur I, prêt d’honneur à 0 %, subventions, calcul du ratio de quasi-fonds propres, détection du *Funding Gap* (déficit ou coussin de sécurité), estimation du ratio de couverture de la dette (*DSCR*), et tableau d’amortissement complet (annuel et mensuel avec prise en compte du différé d’amortissement).
-- **Hypothèses Clairement Balisées** : Toutes les valeurs financières ou immobilières pré-remplies sont explicitement identifiées comme des **hypothèses de travail modifiables** et non contractuelles.
-- **Zéro Donnée ou Recherche Fabriquée** : Le module *Recherche & Réglementation* et le module *Immobilier* exposent le cadre réglementaire parisien vérifiable (EINS Décret Bruit, Licence IV, RSD Paris, ERP 5e catégorie) ainsi que des grilles méthodologiques et gabarits hypothétiques, sans inventer de faux établissements ni de faux articles.
-- **Persistance Locale Sans Backend Requis** : En l’absence d’identifiants serveur, toutes les modifications d’hypothèses, notes de recherche, fiches de locaux candidats, idées et statuts de roadmap sont sauvegardés localement dans le navigateur (`localStorage`), avec fonctions d’export JSON et de réinitialisation.
+- **Aucune authentification active / Aucun contrôle d’accès** : Ce prototype fonctionne intégralement dans le navigateur (`localStorage`) sans serveur d’authentification ni base de données distante. **N’y saisissez aucune donnée personnelle sensible** (ni salaire personnel, ni loyer personnel, ni secret, ni document confidentiel).
+- **Valeurs d’exemple fictives (Placeholders neutres)** : Les montants pré-remplis dans les simulateurs sont des nombres ronds purement illustratifs destinés à tester les formules mathématiques. Un bouton **« Mettre à 0 € »** permet en un clic de repartir d’une feuille vierge.
+- **Aucune affirmation juridique ou technique non sourcée** : Aucune conclusion juridique (ex. règles de Licence IV, seuils acoustiques EINS ou classement ERP) n’est présentée comme acquise. Le module *Questions & Vérifications* et le module *Immobilier* formulent des **questions ouvertes à faire valider par des professionnels qualifiés** (avocat, acousticien, architecte, expert-comptable) avec indication explicite de l’absence de source officielle rattachée dans ce MVP.
+- **Zéro établissement ou article fabriqué** : Aucun faux benchmark ni article fictif n’est inclus.
+
+Pour le détail des étapes restantes avant un usage en production ou un déploiement, consultez [docs/ROADMAP.md](file:///Users/danyvassily/Landrycofee/docs/ROADMAP.md).
 
 ---
 
 ## Architecture des 6 Modules
 
-| Code | Module | Fonctionnalité |
+| Code | Module | Contenu & Périmètre MVP |
 | :--- | :--- | :--- |
-| `MOD-01` | **Tableau de Bord** | Synthèse exécutive, thèse Jour/Après-midi/Nuit et KPIs financiers reliés en temps réel aux simulateurs. |
-| `MOD-02` | **Finance & Simulateurs** | Simulateur d’épargne multi-scénarios, plan de financement CAPEX/BFR, calcul du *Funding Gap*, DSCR et tableau d’amortissement annuel/mensuel. |
-| `MOD-03` | **Recherche & Réglementation** | Matrice de conformité administrative parisienne et journal interactif des protocoles d’observation terrain. |
-| `MOD-04` | **Immobilier & Local** | Cahier des charges technique (dalle béton, triphasé, vitrine, clause bar) et calculateur de score de compatibilité (`/100`). |
-| `MOD-05` | **Idea Lab & Concept** | Chorégraphie opérationnelle sur 3 séquences horaires et registre d’expérimentations (Impact vs Faisabilité). |
-| `MOD-06` | **Feuille de Route 2027** | Rétroplanning T4 2026 → Décembre 2027 structuré autour de 5 portes de décision (*Decision Gates*). |
+| `MOD-01` | **Tableau de Bord** | Vue d’ensemble du concept en 3 séquences horaires et synthèse en temps réel des simulateurs financiers. |
+| `MOD-02` | **Finance & Simulateurs** | **Simulateur I** (épargne mensuelle composée, 3 variantes *-20 % / 100 % / +25 %*, mensualité requise pour une cible) et **Simulateur II** (emplois CAPEX/BFR, ressources, *Funding Gap*, tableau d’amortissement annuel et mensuel avec différé). Boutons **« Mettre à 0 € »** et **« Exemple Neutre »**. |
+| `MOD-03` | **Questions & Vérifications** | Liste de questions juridiques, acoustiques et techniques à poser aux experts compétents + carnet local de notes et sources. |
+| `MOD-04` | **Immobilier & Local** | Questions techniques à vérifier lors des visites et grille de pointage indicative (`/100`, non normative). |
+| `MOD-05` | **Idea Lab & Concept** | Hypothèses d’organisation Matin / Après-midi / Soirée (sans prévisions de marge fabriquées) et carnet d’idées à prototyper. |
+| `MOD-06` | **Feuille de Route 2027** | Grandes étapes indicatives de structuration jusqu’à Décembre 2027 avec suivi de statut local. |
 
 ---
 
-## Plan de Confidentialité & Contrôle d’Accès (Privacy / Auth Gating Plan)
+## Installation & Commandes de Vérification
 
-1. **Niveau 1 — Exécution Locale Privée (Actif par défaut)** :
-   - Métadonnées HTTP configurées en `noindex, nofollow, nocache`.
-   - Aucune clé secrète ni connexion base de données externe embarquée dans le code.
-   - Persistance strictement locale au poste du fondateur via `localStorage` (`project_living_room_founder_workspace_v1`).
-2. **Niveau 2 — Gating Middleware Next.js (Avant partage privé entre co-fondateurs)** :
-   - Ajout d’un `middleware.ts` vérifiant un jeton de session signé (`WORKSPACE_SESSION_SECRET`) et filtrant l’accès selon la liste blanche `FOUNDER_ALLOWED_EMAILS`.
-3. **Niveau 3 — Persistance Supabase Privée & Row-Level Security (RLS)** :
-   - Connexion optionnelle via `NEXT_PUBLIC_SUPABASE_URL` et `NEXT_PUBLIC_SUPABASE_ANON_KEY` (voir `env.example`).
-   - Activation obligatoire de politiques RLS restreignant `SELECT / INSERT / UPDATE / DELETE` aux seuls identifiants UUID des co-fondateurs authentifiés. Aucune clé `service_role` ne doit jamais être exposée côté client.
-
----
-
-## Installation & Commandes
-
-### Statut et confidentialité (important)
-
-Cette livraison est un **MVP local**, pas encore un espace privé multi-utilisateur prêt à publier. L'application n'a pas d'authentification serveur, de base Supabase configurée ni de synchronisation entre fondateurs. Les directives `noindex` ne protègent pas l'accès. N'hébergez pas de données financières privées avant d'avoir mis en place et testé un vrai contrôle d'accès. Les données des modules de recherche sont des grilles et hypothèses, pas des résultats documentaires vérifiés. Aucune automatisation quotidienne n'est configurée.
-
-Node.js 22.12+ est recommandé pour l'arbre de dépendances actuel.
-
-### Installation et développement local
 ```bash
-npm ci
+# Installer les dépendances
+npm install
+
+# Lancer le serveur de développement local
 npm run dev
-```
 
-### Vérifications Qualité (Tests Unitaires, Typage TypeScript & Build Production)
-```bash
-# Exécuter la suite de tests unitaires Vitest sur le moteur financier
+# Exécuter les tests unitaires Vitest sur les fonctions de calcul
 npm test
 
 # Vérifier le typage strict TypeScript
@@ -71,15 +49,19 @@ npm run typecheck
 
 # Compiler le build de production Next.js
 npm run build
+
+# Vérifier l'audit de sécurité des dépendances npm
+npm audit
 ```
 
 ---
 
-## Structure des Fichiers Principaux
+## Structure du Dépôt
 
-- `src/lib/finance.ts` : Moteur pur de calcul financier (épargne composée, effort mensuel requis, plan de financement, *Funding Gap*, amortissement bancaire avec différé, DSCR, score immobilier `/100`).
-- `src/lib/__tests__/finance.test.ts` : Suite de tests unitaires Vitest validant l’exactitude mathématique des simulateurs.
-- `src/lib/project-data.ts` : Hypothèses étalons clairement balisées, grille réglementaire parisienne, cahier des charges immobilier et feuille de route Décembre 2027.
-- `src/lib/storage.ts` : Persistance locale résiliente (`localStorage`) et valeurs par défaut.
-- `src/components/FounderWorkspace.tsx` : Interface complète et responsive des 6 modules de l’espace fondateur.
-- `env.example` / `.env.example` : Modèle de variables d’environnement documenté et garanti sans secret.
+- `src/lib/finance.ts` : Fonctions pures de calcul financier (épargne composée, effort mensuel requis, plan de financement, *Funding Gap*, amortissement bancaire avec différé, grille de pointage indicative `/100`).
+- `src/lib/__tests__/finance.test.ts` : Suite de tests unitaires Vitest vérifiant les calculs financiers, le mode `0 €` et l’absence d’affirmation juridique non sourcée.
+- `src/lib/project-data.ts` : Placeholders financiers neutres, configurations à `0 €`, questions réglementaires et techniques ouvertes, et étapes indicatives de la feuille de route.
+- `src/lib/storage.ts` : Persistance locale dans `localStorage` (`project_living_room_founder_workspace_v2`).
+- `src/components/FounderWorkspace.tsx` : Interface responsive des 6 modules.
+- `docs/ROADMAP.md` : État des lieux honnête du MVP et feuille de route par étapes (Staged Work).
+- `env.example` / `.env.example` : Variables d’environnement indicatives sans aucun secret.

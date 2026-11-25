@@ -24,6 +24,7 @@ import {
   loadWorkspaceState,
   saveWorkspaceState,
   getDefaultWorkspaceState,
+  getZeroFinancialAssumptionsState,
   type PersistedWorkspaceState,
 } from '@/lib/storage';
 
@@ -54,7 +55,7 @@ export default function FounderWorkspace() {
     getDefaultWorkspaceState()
   );
   const [isHydrated, setIsHydrated] = useState(false);
-  const [showAuthPlanModal, setShowAuthPlanModal] = useState(false);
+  const [showMvpStatusPanel, setShowMvpStatusPanel] = useState(false);
   const [amortizationViewMode, setAmortizationViewMode] = useState<'yearly' | 'monthly'>('yearly');
   const [showFullSavingsTable, setShowFullSavingsTable] = useState(false);
 
@@ -66,10 +67,10 @@ export default function FounderWorkspace() {
   const [newResearchMethodology, setNewResearchMethodology] = useState('');
 
   const [newPropLabel, setNewPropLabel] = useState('');
-  const [newPropZone, setNewPropZone] = useState('Paris 11e');
-  const [newPropSurface, setNewPropSurface] = useState(115);
-  const [newPropRent, setNewPropRent] = useState(4500);
-  const [newPropDab, setNewPropDab] = useState(85000);
+  const [newPropZone, setNewPropZone] = useState('Secteur à définir');
+  const [newPropSurface, setNewPropSurface] = useState(110);
+  const [newPropRent, setNewPropRent] = useState(3500);
+  const [newPropDab, setNewPropDab] = useState(40000);
   const [newPropSlab, setNewPropSlab] = useState(true);
   const [newPropPower, setNewPropPower] = useState(true);
   const [newPropLicense, setNewPropLicense] = useState(true);
@@ -165,6 +166,14 @@ export default function FounderWorkspace() {
     saveWorkspaceState(defaults);
   };
 
+  const handleZeroAllFinancials = () => {
+    setWorkspaceState((prev) => {
+      const zeroed = getZeroFinancialAssumptionsState(prev);
+      saveWorkspaceState(zeroed);
+      return zeroed;
+    });
+  };
+
   const handleExportJson = () => {
     if (typeof window === 'undefined') return;
     const blob = new Blob([JSON.stringify(workspaceState, null, 2)], {
@@ -173,7 +182,7 @@ export default function FounderWorkspace() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `project-living-room-hypotheses-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `project-living-room-placeholders-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -183,13 +192,13 @@ export default function FounderWorkspace() {
     if (!newResearchTitle.trim() || !newResearchHypothesis.trim()) return;
     const note: ResearchFieldNote = {
       id: `res-custom-${Date.now()}`,
-      date: new Date().toISOString().slice(0, 7),
+      date: new Date().toISOString().slice(0, 10),
       axis: newResearchAxis,
       title: newResearchTitle.trim(),
       hypothesisTested: newResearchHypothesis.trim(),
       methodologyNote:
-        newResearchMethodology.trim() || 'Relevé terrain ajouté par l’équipe fondatrice.',
-      status: 'À vérifier sur terrain',
+        newResearchMethodology.trim() || 'Question ou note ajoutée localement dans ce navigateur.',
+      status: 'Question ouverte',
     };
     setWorkspaceState((prev) => ({
       ...prev,
@@ -202,9 +211,9 @@ export default function FounderWorkspace() {
 
   const handleCycleResearchStatus = (id: string) => {
     const order: ResearchFieldNote['status'][] = [
-      'À vérifier sur terrain',
-      'En cours d’analyse',
-      'Cadre validé',
+      'Question ouverte',
+      'En cours de vérification',
+      'Source vérifiée',
     ];
     setWorkspaceState((prev) => ({
       ...prev,
@@ -222,15 +231,15 @@ export default function FounderWorkspace() {
     const candidate: PropertyCandidateEvaluation = {
       id: `prop-custom-${Date.now()}`,
       label: newPropLabel.trim(),
-      targetZone: newPropZone.trim() || 'Paris Est / Nord',
+      targetZone: newPropZone.trim() || 'Secteur à définir',
       surfaceSqm: Number(newPropSurface) || 100,
-      monthlyRentExclCharges: Number(newPropRent) || 4000,
+      monthlyRentExclCharges: Number(newPropRent) || 0,
       leaseAssignmentCost: Number(newPropDab) || 0,
       hasConcreteSlab: newPropSlab,
       hasThreePhasePower: newPropPower,
       hasBarLicenseAllowed: newPropLicense,
       hasAdequateFacade: newPropFacade,
-      notes: 'Fiche d’évaluation saisie localement par le fondateur.',
+      notes: 'Fiche de visite saisie localement dans ce navigateur.',
       isHypotheticalTemplate: false,
     };
     setWorkspaceState((prev) => ({
@@ -301,27 +310,34 @@ export default function FounderWorkspace() {
 
   return (
     <div className="min-h-screen flex flex-col bg-living-bg text-living-ink">
-      {/* Bandeau de gouvernance privée, persistance locale et statut des hypothèses */}
+      {/* Bandeau honnête sur le statut MVP, l'absence d'authentification et la nature fictive des exemples */}
       <div className="border-b border-living-border bg-[#EFEAE1] px-4 py-2 text-xs">
         <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center rounded-full border border-living-ink/20 bg-living-ink px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-living-bg">
-              Espace Fondateur Privé
+              Prototype MVP Local-First (Sans Auth Active)
             </span>
             <span className="inline-flex items-center rounded-full bg-[#FBF3DB] px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-[#956400]">
-              Hypothèses de travail modifiables
+              Exemples Fictifs Neutres (Placeholders)
             </span>
             <span className="hidden md:inline text-[#5C554E]">
-              Persistance locale active (localStorage) · Aucun secret embarqué · Aucune donnée fabriquée
+              Sauvegarde locale navigateur uniquement · Ne saisissez aucune donnée personnelle sensible
             </span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              onClick={() => setShowAuthPlanModal((v) => !v)}
+              onClick={() => setShowMvpStatusPanel((v) => !v)}
               className="rounded border border-living-border bg-white px-2.5 py-1 font-mono text-[11px] text-living-ink transition hover:bg-living-muted"
             >
-              Plan Auth & Confidentialité
+              Statut MVP & Limites
+            </button>
+            <button
+              type="button"
+              onClick={handleZeroAllFinancials}
+              className="rounded border border-living-border bg-white px-2.5 py-1 font-mono text-[11px] text-living-ink transition hover:bg-living-muted"
+            >
+              Mettre à 0 €
             </button>
             <button
               type="button"
@@ -335,31 +351,31 @@ export default function FounderWorkspace() {
               onClick={handleResetToDefaults}
               className="rounded border border-living-border bg-white px-2.5 py-1 font-mono text-[11px] text-[#9F2F2D] transition hover:bg-[#FDEBEC]"
             >
-              Réinitialiser
+              Exemple Neutre
             </button>
           </div>
         </div>
       </div>
 
-      {/* Panneau pliable : Plan d'authentification et gouvernance des données */}
-      {showAuthPlanModal && (
+      {/* Panneau pliable : Statut honnête du MVP & Hygiène des données */}
+      {showMvpStatusPanel && (
         <section
-          aria-label="Plan de confidentialité et de contrôle d'accès"
+          aria-label="Statut honnête du prototype MVP et limites actuelles"
           className="border-b border-living-border bg-white px-4 py-6"
         >
           <div className="mx-auto max-w-7xl">
             <div className="flex items-start justify-between gap-4 border-b border-living-border pb-4">
               <div>
                 <p className="font-mono text-xs uppercase tracking-widest text-[#787774]">
-                  Architecture de Sécurité & Gouvernance Privée
+                  Transparence Technique & Périmètre du Prototype
                 </p>
                 <h2 className="mt-1 font-serif text-xl font-normal tracking-tight text-living-ink">
-                  Plan d’Authentification, Cloisonnement & Protection du Dossier Fondateur
+                  Ce qui est fonctionnel aujourd’hui vs Ce qui reste à construire
                 </h2>
               </div>
               <button
                 type="button"
-                onClick={() => setShowAuthPlanModal(false)}
+                onClick={() => setShowMvpStatusPanel(false)}
                 className="rounded border border-living-border px-3 py-1 font-mono text-xs hover:bg-living-muted"
               >
                 Fermer
@@ -368,46 +384,44 @@ export default function FounderWorkspace() {
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3 text-sm">
               <div className="rounded-lg border border-living-border bg-living-bg p-4">
                 <span className="inline-block rounded-full bg-[#EDF3EC] px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-[#346538]">
-                  Niveau 1 · Actif (MVP Local)
+                  1 · Fonctionnel dans ce MVP
                 </span>
                 <h3 className="mt-2 font-medium text-living-ink">
-                  Mode Local-First Sans Exposition Publique
+                  Simulateurs Mathématiques & Stockage Navigateur
                 </h3>
                 <p className="mt-1 text-xs leading-relaxed text-[#5C554E]">
-                  Aucune clé API ni connexion Supabase active n’est embarquée. Les simulations, notes
-                  terrain et fiches de locaux sont sauvegardées exclusivement dans le navigateur du
-                  fondateur (<code className="font-mono">localStorage</code>) avec balise{' '}
-                  <code className="font-mono">noindex, nofollow</code>.
+                  Les moteurs de calcul d’épargne, d’écart de financement (<em>Funding Gap</em>) et
+                  d’amortissement d’emprunt sont opérationnels et testés unitairement. Les saisies
+                  sont conservées localement dans votre navigateur (
+                  <code className="font-mono">localStorage</code>).
                 </p>
               </div>
               <div className="rounded-lg border border-living-border bg-living-bg p-4">
                 <span className="inline-block rounded-full bg-[#FBF3DB] px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-[#956400]">
-                  Niveau 2 · Pré-Déploiement Privé
+                  2 · Absence d’Authentification Active
                 </span>
                 <h3 className="mt-2 font-medium text-living-ink">
-                  Gating Middleware Next.js & Liste Blanche Fondateurs
+                  Aucune Protection Serveur ni Donnée Personnelle
                 </h3>
                 <p className="mt-1 text-xs leading-relaxed text-[#5C554E]">
-                  Avant tout hébergement privé partagé entre co-fondateurs : activation d’un
-                  middleware Next.js vérifiant une session signée HTTP-only et restreignant l’accès
-                  aux seules adresses e-mail figurant dans{' '}
-                  <code className="font-mono">FOUNDER_ALLOWED_EMAILS</code>.
+                  Ce dépôt ne contient aucun système d’authentification actif ni chiffrement maison.
+                  N’y stockez aucun secret, salaire personnel, loyer personnel ou document
+                  confidentiel tant qu’un fournisseur d’authentification standard (ex. Supabase Auth
+                  + RLS) n’est pas branché.
                 </p>
               </div>
               <div className="rounded-lg border border-living-border bg-living-bg p-4">
                 <span className="inline-block rounded-full bg-[#E1F3FE] px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-[#1F6C9F]">
-                  Niveau 3 · Persistance Supabase + RLS
+                  3 · Zéro Conseil Juridique ou Prévision
                 </span>
                 <h3 className="mt-2 font-medium text-living-ink">
-                  Chiffrement & Politiques Row-Level Security (RLS)
+                  Placeholders Neutres & Questions à Vérifier
                 </h3>
                 <p className="mt-1 text-xs leading-relaxed text-[#5C554E]">
-                  Lors de la connexion future d’un projet Supabase privé : tables{' '}
-                  <code className="font-mono">founder_scenarios</code>,{' '}
-                  <code className="font-mono">property_Pipeline</code> et{' '}
-                  <code className="font-mono">field_notes</code> verrouillées par RLS strictes (
-                  <code className="font-mono">auth.uid() IN (founder_ids)</code>), sans jamais
-                  exposer de clé <code className="font-mono">service_role</code> côté client.
+                  Les montants pré-remplis sont de simples exemples fictifs ronds (remis à{' '}
+                  <code className="font-mono">0 €</code> en un clic). Les rubriques réglementaires et
+                  techniques sont formulées comme des questions ouvertes à faire valider par un
+                  avocat, un expert-comptable, un architecte et un acousticien.
                 </p>
               </div>
             </div>
@@ -422,7 +436,7 @@ export default function FounderWorkspace() {
             <div>
               <div className="flex items-center gap-2.5">
                 <span className="font-mono text-xs uppercase tracking-widest text-[#787774]">
-                  PARIS · CIBLE DÉCEMBRE 2027
+                  PARIS · CIBLE INDICATIVE DÉCEMBRE 2027
                 </span>
                 <span className="text-living-border">|</span>
                 <span className="font-mono text-xs text-living-terracotta">
@@ -434,11 +448,11 @@ export default function FounderWorkspace() {
               </h1>
             </div>
 
-            {/* Résumé financier rapide toujours visible dans l'en-tête */}
+            {/* Résumé des simulateurs dans l'en-tête */}
             <div className="grid grid-cols-3 gap-2 sm:gap-3 rounded-lg border border-living-border bg-white p-2.5 text-xs">
               <div className="px-2">
                 <div className="font-mono text-[10px] uppercase tracking-wider text-[#787774]">
-                  Budget Projet (Hyp.)
+                  Emplois Simulés (Ex.)
                 </div>
                 <div className="mt-0.5 font-mono text-sm font-semibold tabular-nums text-living-ink">
                   {formatEur(fundingAndLoanResult.totalProjectCost)}
@@ -446,7 +460,7 @@ export default function FounderWorkspace() {
               </div>
               <div className="border-l border-living-border px-2">
                 <div className="font-mono text-[10px] uppercase tracking-wider text-[#787774]">
-                  Apport Projeté M+{workspaceState.savingsAssumptions.monthsToTarget}
+                  Apport Simulé M+{workspaceState.savingsAssumptions.monthsToTarget}
                 </div>
                 <div className="mt-0.5 font-mono text-sm font-semibold tabular-nums text-living-ink">
                   {formatEur(fundingAndLoanResult.effectiveFounderEquity)}
@@ -454,7 +468,7 @@ export default function FounderWorkspace() {
               </div>
               <div className="border-l border-living-border px-2">
                 <div className="font-mono text-[10px] uppercase tracking-wider text-[#787774]">
-                  {fundingAndLoanResult.fundingGap > 0 ? 'Écart à combler' : 'Solde Financement'}
+                  {fundingAndLoanResult.fundingGap > 0 ? 'Écart à combler' : 'Solde Simulé'}
                 </div>
                 <div
                   className={`mt-0.5 font-mono text-sm font-semibold tabular-nums ${
@@ -471,7 +485,7 @@ export default function FounderWorkspace() {
 
           {/* Barre de navigation des 6 modules clairement balisés */}
           <nav
-            aria-label="Modules de l’espace fondateur"
+            aria-label="Modules de l’outil Project Living Room"
             className="mt-4 flex items-center gap-1.5 overflow-x-auto pb-1"
           >
             {WORKSPACE_MODULES.map((mod) => {
@@ -537,56 +551,55 @@ export default function FounderWorkspace() {
         {/* ================================================================= */}
         {activeModule === 'dashboard' && (
           <div className="space-y-8 fade-enter">
-            {/* Thèse Exécutive & Positionnement */}
+            {/* Vision du Concept & Périmètre Honnête */}
             <section className="grid grid-cols-1 gap-6 lg:grid-cols-12">
               <div className="rounded-xl border border-living-border bg-white p-6 sm:p-8 lg:col-span-7">
                 <span className="inline-block rounded-full bg-[#EFEAE1] px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-living-ink">
-                  Thèse Fondatrice · Horizon Décembre 2027
+                  Hypothèse de Concept · Horizon Indicatif Décembre 2027
                 </span>
                 <h3 className="mt-4 font-serif text-2xl sm:text-3xl font-normal leading-tight text-living-ink">
-                  Transformer une corvée urbaine incompressible en tiers-lieu culturel, caféiné et
-                  audiophile à Paris.
+                  Explorer la complémentarité entre une laverie de quartier, un coffee shop et un
+                  salon d’écoute du soir à Paris.
                 </h3>
                 <p className="mt-4 text-sm leading-relaxed text-[#5C554E]">
-                  <strong>Project Living Room</strong> hybride trois modèles économiques
-                  complémentaires sur une même surface commerciale parisienne (110 à 150 m²) : une{' '}
-                  <strong>laverie haute performance</strong> assurant un flux récurrent dès 07h30, un{' '}
-                  <strong>coffee shop de spécialité</strong> monétisant les 45 minutes d’attente en
-                  journée, et un <strong>listening bar à cocktails</strong> à haute valeur ajoutée en
-                  soirée.
+                  Ce prototype MVP permet de tester la structure financière d’un projet hybride (
+                  <strong>Project Living Room</strong>) et de centraliser les questions techniques,
+                  immobilières et réglementaires à soumettre aux professionnels compétents avant tout
+                  engagement.
                 </p>
                 <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
                   <div className="rounded-lg border border-living-border bg-living-bg p-3.5">
                     <div className="font-mono text-[11px] uppercase tracking-wider text-[#787774]">
-                      07h30 – 14h00
+                      Séquence I · Matin
                     </div>
                     <div className="mt-1 text-sm font-medium text-living-ink">
-                      Laverie & Espresso
+                      Laverie & Café
                     </div>
                     <p className="mt-1 text-xs text-[#5C554E]">
-                      Cycles automatisés, café de spécialité, lumière naturelle et tables d’attente.
+                      Cycles de lavage/séchage et comptoir café dans un espace accueillant.
                     </p>
                   </div>
                   <div className="rounded-lg border border-living-border bg-living-bg p-3.5">
                     <div className="font-mono text-[11px] uppercase tracking-wider text-[#787774]">
-                      14h00 – 18h30
+                      Séquence II · Après-midi
                     </div>
                     <div className="mt-1 text-sm font-medium text-living-ink">
-                      Salon Urbain & Linge
+                      Salon de Quartier
                     </div>
                     <p className="mt-1 text-xs text-[#5C554E]">
-                      Occupation des heures creuses grâce à la récurrence laverie et écoute d’albums.
+                      Continuité du service laverie, boissons sans alcool et préparation du soir.
                     </p>
                   </div>
                   <div className="rounded-lg border border-living-border bg-living-bg p-3.5">
                     <div className="font-mono text-[11px] uppercase tracking-wider text-[#787774]">
-                      18h30 – 01h00
+                      Séquence III · Soirée
                     </div>
                     <div className="mt-1 text-sm font-medium text-living-ink">
                       Listening & Cocktail Bar
                     </div>
                     <p className="mt-1 text-xs text-[#5C554E]">
-                      Occultation acoustique du parc machines, système Hi-Fi vinyle et cocktails.
+                      Écoute musicale soignée et carte du soir, sous réserve des validations
+                      acoustiques et administratives.
                     </p>
                   </div>
                 </div>
@@ -597,26 +610,26 @@ export default function FounderWorkspace() {
                 <div>
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-mono text-xs uppercase tracking-wider text-[#787774]">
-                      Synthèse Financière Live
+                      Aperçu des Simulateurs
                     </span>
                     <span className="rounded-full bg-[#FBF3DB] px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-[#956400]">
-                      Hypothèses Modifiables
+                      Placeholders Fictifs
                     </span>
                   </div>
                   <h3 className="mt-2 font-serif text-xl font-normal text-living-ink">
-                    Équilibre du Plan de Financement
+                    Équilibre Emplois / Ressources Simulé
                   </h3>
 
                   <dl className="mt-5 space-y-3 text-sm">
                     <div className="flex items-center justify-between border-b border-living-border pb-2.5">
-                      <dt className="text-[#5C554E]">Investissement Total (CAPEX + BFR)</dt>
+                      <dt className="text-[#5C554E]">Total Emplois Saisis (CAPEX + BFR)</dt>
                       <dd className="font-mono font-semibold tabular-nums text-living-ink">
                         {formatEur(fundingAndLoanResult.totalProjectCost)}
                       </dd>
                     </div>
                     <div className="flex items-center justify-between border-b border-living-border pb-2.5">
                       <dt className="text-[#5C554E]">
-                        Apport Fondateurs Projeté (M+{workspaceState.savingsAssumptions.monthsToTarget})
+                        Apport Simulé (Horizon M+{workspaceState.savingsAssumptions.monthsToTarget})
                       </dt>
                       <dd className="font-mono font-semibold tabular-nums text-living-ink">
                         {formatEur(fundingAndLoanResult.effectiveFounderEquity)}
@@ -624,7 +637,7 @@ export default function FounderWorkspace() {
                     </div>
                     <div className="flex items-center justify-between border-b border-living-border pb-2.5">
                       <dt className="text-[#5C554E]">
-                        Quasi-Fonds Propres Totaux ({fundingAndLoanResult.equityRatioPercent}%)
+                        Apport + Prêt 0 % + Aides ({fundingAndLoanResult.equityRatioPercent} %)
                       </dt>
                       <dd className="font-mono font-semibold tabular-nums text-living-ink">
                         {formatEur(fundingAndLoanResult.totalQuasiEquity)}
@@ -632,8 +645,8 @@ export default function FounderWorkspace() {
                     </div>
                     <div className="flex items-center justify-between border-b border-living-border pb-2.5">
                       <dt className="text-[#5C554E]">
-                        Dette Bancaire ({workspaceState.financingAssumptions.loanDurationYears} ans à{' '}
-                        {workspaceState.financingAssumptions.annualInterestRatePercent}%)
+                        Emprunt Bancaire Simulé ({workspaceState.financingAssumptions.loanDurationYears}{' '}
+                        ans à {workspaceState.financingAssumptions.annualInterestRatePercent} %)
                       </dt>
                       <dd className="font-mono font-semibold tabular-nums text-living-ink">
                         {formatEur(fundingAndLoanResult.loanSummary.principal)}
@@ -643,7 +656,7 @@ export default function FounderWorkspace() {
                       <dt className="font-medium text-living-ink">
                         {fundingAndLoanResult.fundingGap > 0
                           ? 'Écart de Financement (Funding Gap)'
-                          : 'Excédent / Coussin de Financement'}
+                          : 'Solde Ressources vs Emplois'}
                       </dt>
                       <dd
                         className={`rounded px-2 py-0.5 font-mono font-semibold tabular-nums ${
@@ -662,7 +675,7 @@ export default function FounderWorkspace() {
 
                 <div className="mt-6 pt-4 border-t border-living-border flex flex-wrap items-center justify-between gap-3">
                   <div className="text-xs text-[#5C554E]">
-                    Mensualité crédit + assurance :{' '}
+                    Mensualité simulée (crédit + assurance) :{' '}
                     <strong className="font-mono text-living-ink">
                       {formatEurPrecise(
                         fundingAndLoanResult.loanSummary.totalMonthlyDebtServiceAmortizing
@@ -675,20 +688,20 @@ export default function FounderWorkspace() {
                     onClick={() => setActiveModule('finance')}
                     className="rounded border border-living-ink bg-living-ink px-3.5 py-2 text-xs font-medium text-white transition hover:bg-living-espresso"
                   >
-                    Simuler & Ajuster →
+                    Modifier les Valeurs →
                   </button>
                 </div>
               </div>
             </section>
 
-            {/* Accès rapide aux 6 Modules de l'Espace Fondateur */}
+            {/* Accès rapide aux 6 Modules */}
             <section>
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="font-serif text-xl font-normal text-living-ink">
-                  Architecture des Modules du Cockpit Fondateur
+                  Modules du Prototype MVP
                 </h3>
                 <span className="font-mono text-xs text-[#787774]">
-                  6 modules opérationnels · Données persistées localement
+                  6 modules · Sauvegarde locale dans le navigateur
                 </span>
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -717,7 +730,7 @@ export default function FounderWorkspace() {
                         onClick={() => setActiveModule(mod.id)}
                         className="font-mono text-xs font-medium text-living-ink underline-offset-4 hover:underline"
                       >
-                        Accéder au module {mod.shortLabel} →
+                        Ouvrir {mod.shortLabel} →
                       </button>
                     </div>
                   </div>
@@ -732,29 +745,39 @@ export default function FounderWorkspace() {
         {/* ================================================================= */}
         {activeModule === 'finance' && (
           <div className="space-y-10 fade-enter">
-            {/* Avertissement explicite sur la nature hypothétique des hypothèses */}
+            {/* Avertissement explicite sur la nature purement illustrative des valeurs */}
             <div className="rounded-xl border border-[#956400]/30 bg-[#FBF3DB] p-4 text-xs text-[#956400]">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="max-w-3xl">
                   <strong className="font-mono uppercase tracking-wider">
-                    Avis de Simulation — Hypothèses Modifiables (Hypothétiques) :
+                    Valeurs d’Exemple Fictives (Placeholders) — Aucune Prévision ni Donnée Personnelle :
                   </strong>{' '}
-                  Toutes les valeurs ci-dessous constituent des hypothèses de travail prévisionnelles
-                  pour Project Living Room (horizon Décembre 2027). Modifiez librement les curseurs et
-                  champs numériques ; vos réglages sont sauvegardés localement dans ce navigateur.
+                  Les montants pré-remplis sont des nombres ronds purement illustratifs destinés à
+                  montrer le fonctionnement des formules. N’y encodez pas de données personnelles
+                  sensibles (salaire, loyer personnel). Vous pouvez tout remettre à{' '}
+                  <code className="font-mono">0 €</code> pour partir d’une feuille vierge.
                 </div>
-                <button
-                  type="button"
-                  onClick={handleResetToDefaults}
-                  className="shrink-0 rounded border border-[#956400]/40 bg-white px-2.5 py-1 font-mono text-[11px] text-[#956400] hover:bg-[#FBF3DB]"
-                >
-                  Restaurer les hypothèses étalons
-                </button>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleZeroAllFinancials}
+                    className="shrink-0 rounded border border-[#956400]/50 bg-white px-3 py-1.5 font-mono text-[11px] font-medium text-living-ink hover:bg-living-muted"
+                  >
+                    Remettre tous les montants à 0 €
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleResetToDefaults}
+                    className="shrink-0 rounded border border-[#956400]/40 bg-white px-3 py-1.5 font-mono text-[11px] text-[#956400] hover:bg-[#FBF3DB]"
+                  >
+                    Charger l’exemple neutre
+                  </button>
+                </div>
               </div>
             </div>
 
             {/* ------------------------------------------------------------- */}
-            {/* SIMULATEUR 1 : ÉPARGNE & APPORT FONDATEURS                    */}
+            {/* SIMULATEUR 1 : ÉPARGNE & APPORT                               */}
             {/* ------------------------------------------------------------- */}
             <section
               aria-labelledby="sim-savings-heading"
@@ -763,17 +786,18 @@ export default function FounderWorkspace() {
               <div className="border-b border-living-border pb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <span className="font-mono text-xs uppercase tracking-widest text-[#787774]">
-                    Simulateur I · Constitution des Fonds Propres
+                    Simulateur I · Projection de Capitalisation Mensuelle
                   </span>
                   <h3
                     id="sim-savings-heading"
                     className="mt-1 font-serif text-2xl font-normal text-living-ink"
                   >
-                    Scénarios d’Épargne & Apport Personnel Fondateurs
+                    Scénarios d’Épargne & Constitution d’Apport (Placeholders Modifiables)
                   </h3>
                 </div>
                 <span className="self-start sm:self-auto rounded-full bg-[#FBF3DB] px-3 py-1 font-mono text-xs text-[#956400]">
-                  effort requis cible : {formatEur(savingsResult.requiredMonthlyForTarget)}/mois
+                  Mensualité requise pour la cible saisie :{' '}
+                  {formatEur(savingsResult.requiredMonthlyForTarget)}/mois
                 </span>
               </div>
 
@@ -781,13 +805,13 @@ export default function FounderWorkspace() {
                 {/* Panneau de contrôle des hypothèses d'épargne */}
                 <div className="space-y-5 lg:col-span-5">
                   <h4 className="font-mono text-xs uppercase tracking-wider text-[#787774]">
-                    Hypothèses d’Épargne (Modifiables)
+                    Paramètres d’Entrée (Exemples Modifiables)
                   </h4>
 
                   <div>
                     <div className="flex justify-between text-xs font-medium">
                       <label htmlFor="input-initial-savings">
-                        Épargne initiale déjà mobilisable (€)
+                        Capital initial d’exemple (€)
                       </label>
                       <span className="font-mono tabular-nums">
                         {formatEur(workspaceState.savingsAssumptions.initialSavings)}
@@ -808,7 +832,7 @@ export default function FounderWorkspace() {
                       />
                       <input
                         type="number"
-                        aria-label="Saisie numérique épargne initiale"
+                        aria-label="Saisie numérique capital initial"
                         min={0}
                         step={500}
                         value={workspaceState.savingsAssumptions.initialSavings}
@@ -823,7 +847,7 @@ export default function FounderWorkspace() {
                   <div>
                     <div className="flex justify-between text-xs font-medium">
                       <label htmlFor="input-monthly-contribution">
-                        Versement mensuel combiné fondateurs (€/mois)
+                        Versement mensuel d’exemple (€/mois)
                       </label>
                       <span className="font-mono tabular-nums">
                         {formatEur(workspaceState.savingsAssumptions.monthlyContribution)}/mois
@@ -834,7 +858,7 @@ export default function FounderWorkspace() {
                         id="input-monthly-contribution"
                         type="range"
                         min={0}
-                        max={12000}
+                        max={10000}
                         step={100}
                         value={workspaceState.savingsAssumptions.monthlyContribution}
                         onChange={(e) =>
@@ -862,7 +886,7 @@ export default function FounderWorkspace() {
                         htmlFor="input-months-horizon"
                         className="block text-xs font-medium text-living-ink"
                       >
-                        Horizon avant closing (mois)
+                        Horizon de simulation (mois)
                       </label>
                       <input
                         id="input-months-horizon"
@@ -881,7 +905,7 @@ export default function FounderWorkspace() {
                         htmlFor="input-annual-yield"
                         className="block text-xs font-medium text-living-ink"
                       >
-                        Rendement annuel net (%)
+                        Taux annuel simulé (%)
                       </label>
                       <input
                         id="input-annual-yield"
@@ -904,13 +928,13 @@ export default function FounderWorkspace() {
                         htmlFor="input-exceptional-amount"
                         className="block text-xs font-medium text-living-ink"
                       >
-                        Apport exceptionnel ponctuel (€)
+                        Versement ponctuel optionnel (€)
                       </label>
                       <input
                         id="input-exceptional-amount"
                         type="number"
                         min={0}
-                        step={1000}
+                        step={500}
                         value={workspaceState.savingsAssumptions.exceptionalContribution}
                         onChange={(e) =>
                           updateSavingsField('exceptionalContribution', Number(e.target.value))
@@ -923,7 +947,7 @@ export default function FounderWorkspace() {
                         htmlFor="input-exceptional-month"
                         className="block text-xs font-medium text-living-ink"
                       >
-                        Mois de versement exceptionnel (M+)
+                        Mois du versement ponctuel (M+)
                       </label>
                       <input
                         id="input-exceptional-month"
@@ -942,7 +966,7 @@ export default function FounderWorkspace() {
                   <div>
                     <div className="flex justify-between text-xs font-medium">
                       <label htmlFor="input-target-equity">
-                        Cible d’apport personnel visée (€)
+                        Cible d’apport à tester (€)
                       </label>
                       <span className="font-mono tabular-nums">
                         {formatEur(workspaceState.savingsAssumptions.targetFounderEquity)}
@@ -952,7 +976,7 @@ export default function FounderWorkspace() {
                       <input
                         id="input-target-equity"
                         type="range"
-                        min={30000}
+                        min={0}
                         max={250000}
                         step={2500}
                         value={workspaceState.savingsAssumptions.targetFounderEquity}
@@ -976,11 +1000,11 @@ export default function FounderWorkspace() {
                   </div>
                 </div>
 
-                {/* Comparaison des 3 scénarios d'épargne */}
+                {/* Comparaison des 3 variantes d'épargne */}
                 <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
                   <div>
                     <h4 className="font-mono text-xs uppercase tracking-wider text-[#787774]">
-                      Comparaison des 3 Trajectoires à M+{workspaceState.savingsAssumptions.monthsToTarget}
+                      Comparaison de 3 Variantes à M+{workspaceState.savingsAssumptions.monthsToTarget}
                     </h4>
                     <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3">
                       {savingsResult.scenarios.map((scen) => {
@@ -1001,7 +1025,7 @@ export default function FounderWorkspace() {
                               </span>
                               {isCentral && (
                                 <span className="rounded bg-living-ink px-1.5 py-0.5 font-mono text-[9px] uppercase text-white">
-                                  Référence
+                                  Saisie
                                 </span>
                               )}
                             </div>
@@ -1019,7 +1043,7 @@ export default function FounderWorkspace() {
                                 </dd>
                               </div>
                               <div className="flex justify-between">
-                                <dt className="text-[#787774]">Intérêts acquis :</dt>
+                                <dt className="text-[#787774]">Intérêts calculés :</dt>
                                 <dd className="font-mono tabular-nums">
                                   +{formatEurPrecise(scen.totalInterestEarned)}
                                 </dd>
@@ -1043,11 +1067,11 @@ export default function FounderWorkspace() {
                     </div>
                   </div>
 
-                  {/* Visualisation de la progression mensuelle du Scénario Central */}
+                  {/* Visualisation de la progression mensuelle */}
                   <div className="rounded-xl border border-living-border bg-living-bg p-4">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <span className="font-mono text-xs uppercase tracking-wider text-living-ink">
-                        Courbe de Capitalisation — Scénario Central (M+1 à M+
+                        Progression Mensuelle — Variante Centrale (M+1 à M+
                         {workspaceState.savingsAssumptions.monthsToTarget})
                       </span>
                       <button
@@ -1061,21 +1085,23 @@ export default function FounderWorkspace() {
                       </button>
                     </div>
 
-                    {/* Barres de progression mensuelle */}
-                    <div className="mt-4 flex h-28 items-end gap-1.5 pt-2">
+                    <div className="mt-4 flex h-28 items-end gap-1 pt-2 overflow-x-auto">
                       {savingsResult.central.schedule.map((pt) => {
                         const maxVal = Math.max(
                           savingsResult.central.finalBalance,
                           workspaceState.savingsAssumptions.targetFounderEquity,
                           1
                         );
-                        const heightPct = Math.min(100, Math.max(10, (pt.endingBalance / maxVal) * 100));
+                        const heightPct = Math.min(
+                          100,
+                          Math.max(8, (pt.endingBalance / maxVal) * 100)
+                        );
                         const reachedTarget =
                           pt.endingBalance >= workspaceState.savingsAssumptions.targetFounderEquity;
                         return (
                           <div
                             key={pt.monthIndex}
-                            className="flex-1 flex flex-col items-center gap-1 h-full justify-end"
+                            className="flex-1 min-w-[14px] flex flex-col items-center gap-1 h-full justify-end"
                             title={`${pt.label}: ${formatEur(pt.endingBalance)}`}
                           >
                             <div
@@ -1084,7 +1110,7 @@ export default function FounderWorkspace() {
                                 reachedTarget ? 'bg-[#3E5C4E]' : 'bg-living-ink'
                               }`}
                             />
-                            <span className="font-mono text-[9px] text-[#787774]">{pt.label}</span>
+                            <span className="font-mono text-[8px] text-[#787774]">{pt.label}</span>
                           </div>
                         );
                       })}
@@ -1098,7 +1124,7 @@ export default function FounderWorkspace() {
                               <th className="py-1.5 pr-3">Mois</th>
                               <th className="py-1.5 pr-3">Solde Début</th>
                               <th className="py-1.5 pr-3">Mensualité</th>
-                              <th className="py-1.5 pr-3">Apport Exc.</th>
+                              <th className="py-1.5 pr-3">Ponctuel</th>
                               <th className="py-1.5 pr-3">Intérêts</th>
                               <th className="py-1.5 text-right">Solde Fin</th>
                             </tr>
@@ -1145,13 +1171,13 @@ export default function FounderWorkspace() {
               <div className="border-b border-living-border pb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <span className="font-mono text-xs uppercase tracking-widest text-[#787774]">
-                    Simulateur II · Emplois / Ressources & Dette Bancaire
+                    Simulateur II · Emplois / Ressources & Amortissement Bancaire
                   </span>
                   <h3
                     id="sim-loan-heading"
                     className="mt-1 font-serif text-2xl font-normal text-living-ink"
                   >
-                    Plan de Financement, Écart (Funding Gap) & Amortissement d’Emprunt
+                    Plan de Financement, Écart (Funding Gap) & Tableau d’Amortissement
                   </h3>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
@@ -1160,17 +1186,17 @@ export default function FounderWorkspace() {
                     onClick={handleAutoBalanceLoan}
                     className="rounded border border-living-ink bg-living-ink px-3 py-1.5 font-mono text-xs text-white transition hover:bg-living-espresso"
                   >
-                    Équilibrer l’emprunt sur le Funding Gap (0 €)
+                    Ajuster l’emprunt pour équilibrer le Funding Gap (0 €)
                   </button>
                 </div>
               </div>
 
               <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-12">
-                {/* Colonne 1 : Besoins d'investissement (CAPEX & BFR) */}
+                {/* Colonne 1 : Besoins d'investissement (Placeholders CAPEX & BFR) */}
                 <div className="space-y-4 lg:col-span-5">
                   <div className="flex items-center justify-between">
                     <h4 className="font-mono text-xs uppercase tracking-wider text-[#787774]">
-                      1. Emplois — Postes CAPEX & BFR (Hypothèses)
+                      1. Emplois — Postes à Chiffrer sur Devis (€)
                     </h4>
                     <span className="font-mono text-xs font-semibold">
                       Total : {formatEur(fundingAndLoanResult.totalProjectCost)}
@@ -1228,16 +1254,17 @@ export default function FounderWorkspace() {
                 <div className="space-y-6 lg:col-span-7">
                   <div className="rounded-xl border border-living-border bg-living-bg p-5">
                     <h4 className="font-mono text-xs uppercase tracking-wider text-[#787774]">
-                      2. Ressources & Paramètres du Crédit Bancaire (Hypothèses)
+                      2. Ressources & Paramètres de Crédit Simulés (Placeholders)
                     </h4>
 
                     <div className="mt-4 flex items-center justify-between rounded-lg border border-living-border bg-white p-3 text-xs">
                       <div>
                         <span className="font-medium text-living-ink">
-                          Synchroniser l’apport personnel depuis le Simulateur I (Scénario Central)
+                          Utiliser le solde final du Simulateur I (Variante Centrale) comme apport
                         </span>
                         <p className="text-[11px] text-[#5C554E]">
-                          Apport synchronisé : {formatEur(savingsResult.central.finalBalance)}
+                          Montant issu du Simulateur I :{' '}
+                          {formatEur(savingsResult.central.finalBalance)}
                         </p>
                       </div>
                       <input
@@ -1257,7 +1284,7 @@ export default function FounderWorkspace() {
                           htmlFor="input-manual-equity"
                           className="block text-xs font-medium text-living-ink"
                         >
-                          Apport personnel fondateurs manuel (€)
+                          Apport manuel saisi (€)
                         </label>
                         <input
                           id="input-manual-equity"
@@ -1279,7 +1306,7 @@ export default function FounderWorkspace() {
                           htmlFor="input-honor-loan"
                           className="block text-xs font-medium text-living-ink"
                         >
-                          Prêt d’honneur 0% (€)
+                          Prêt à taux 0 % simulé (€)
                         </label>
                         <input
                           id="input-honor-loan"
@@ -1317,7 +1344,7 @@ export default function FounderWorkspace() {
                           htmlFor="input-bank-principal"
                           className="block text-xs font-medium text-living-ink"
                         >
-                          Emprunt bancaire (€)
+                          Emprunt bancaire simulé (€)
                         </label>
                         <input
                           id="input-bank-principal"
@@ -1339,7 +1366,7 @@ export default function FounderWorkspace() {
                           htmlFor="input-loan-rate"
                           className="block text-xs font-medium text-living-ink"
                         >
-                          Taux nominal (%)
+                          Taux annuel (%)
                         </label>
                         <input
                           id="input-loan-rate"
@@ -1423,7 +1450,7 @@ export default function FounderWorkspace() {
                     <div className="mt-4">
                       <div className="flex justify-between text-xs font-medium">
                         <label htmlFor="input-monthly-ebitda">
-                          EBE / EBITDA mensuel hypothétique en croisière (pour test DSCR)
+                          EBE / EBITDA mensuel hypothétique optionnel (0 € par défaut — sans prévision)
                         </label>
                         <span className="font-mono tabular-nums">
                           {formatEur(workspaceState.financingAssumptions.hypotheticalMonthlyEbitda)}
@@ -1433,7 +1460,7 @@ export default function FounderWorkspace() {
                       <input
                         id="input-monthly-ebitda"
                         type="range"
-                        min={2000}
+                        min={0}
                         max={20000}
                         step={200}
                         value={workspaceState.financingAssumptions.hypotheticalMonthlyEbitda}
@@ -1455,26 +1482,26 @@ export default function FounderWorkspace() {
                       }`}
                     >
                       <div className="font-mono text-[11px] uppercase tracking-wider">
-                        Diagnostic Écart de Financement (Funding Gap)
+                        Écart de Financement (Funding Gap)
                       </div>
                       <div className="mt-2 font-mono text-2xl font-semibold tabular-nums">
                         {fundingAndLoanResult.fundingGap > 0
-                          ? `Déficit : ${formatEur(fundingAndLoanResult.fundingGap)}`
-                          : `Coussin : +${formatEur(fundingAndLoanResult.netFundingBalance)}`}
+                          ? `Manque : ${formatEur(fundingAndLoanResult.fundingGap)}`
+                          : `Solde : +${formatEur(fundingAndLoanResult.netFundingBalance)}`}
                       </div>
                       <p className="mt-2 text-xs leading-relaxed">
-                        Ressources mobilisées :{' '}
+                        Ressources saisies :{' '}
                         <strong>{formatEur(fundingAndLoanResult.totalAvailableFunding)}</strong>{' '}
                         pour <strong>{formatEur(fundingAndLoanResult.totalProjectCost)}</strong>{' '}
-                        d’emplois. Ratio de quasi-fonds propres :{' '}
-                        <strong>{fundingAndLoanResult.equityRatioPercent}%</strong> (cible bancaire
-                        Paris &ge; 28%).
+                        d’emplois. Part Apport + Prêt 0 % + Aides :{' '}
+                        <strong>{fundingAndLoanResult.equityRatioPercent} %</strong> (exigences
+                        exactes à confirmer avec votre banque).
                       </p>
                     </div>
 
                     <div className="rounded-xl border border-living-border bg-living-bg p-5">
                       <div className="font-mono text-[11px] uppercase tracking-wider text-[#787774]">
-                        Service de la Dette & Couverture (DSCR)
+                        Service Mensuel de l’Emprunt Simulé
                       </div>
                       <div className="mt-2 font-mono text-2xl font-semibold tabular-nums text-living-ink">
                         {formatEurPrecise(
@@ -1484,21 +1511,30 @@ export default function FounderWorkspace() {
                       </div>
                       <div className="mt-2 space-y-1 text-xs text-[#5C554E]">
                         <div>
-                          Coût total des intérêts + assurance :{' '}
+                          Total intérêts + assurance sur la durée :{' '}
                           <strong className="font-mono text-living-ink">
                             {formatEur(fundingAndLoanResult.loanSummary.totalCreditCost)}
                           </strong>
                         </div>
                         <div>
-                          Ratio DSCR estimé :{' '}
-                          <strong className="font-mono text-living-ink">
-                            {fundingAndLoanResult.loanSummary.dscrEstimate}x
-                          </strong>{' '}
-                          (EBE min. prudent 1.3x :{' '}
-                          {formatEur(
-                            fundingAndLoanResult.loanSummary.requiredMonthlyEbitdaForSafeDscr
+                          {workspaceState.financingAssumptions.hypotheticalMonthlyEbitda > 0 ? (
+                            <>
+                              Ratio EBE saisi / Mensualité :{' '}
+                              <strong className="font-mono text-living-ink">
+                                {fundingAndLoanResult.loanSummary.dscrEstimate}x
+                              </strong>
+                            </>
+                          ) : (
+                            <>
+                              Repère indicatif (1,3x la mensualité) :{' '}
+                              <strong className="font-mono text-living-ink">
+                                {formatEur(
+                                  fundingAndLoanResult.loanSummary.requiredMonthlyEbitdaForSafeDscr
+                                )}
+                                /mois
+                              </strong>
+                            </>
                           )}
-                          /mois)
                         </div>
                       </div>
                     </div>
@@ -1511,7 +1547,7 @@ export default function FounderWorkspace() {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <h4 className="font-serif text-lg font-normal text-living-ink">
-                      Tableau d’Amortissement de l’Emprunt Bancaire
+                      Tableau d’Amortissement de l’Emprunt Simulé
                     </h4>
                     <p className="text-xs text-[#5C554E]">
                       Capital : {formatEur(fundingAndLoanResult.loanSummary.principal)} sur{' '}
@@ -1642,72 +1678,78 @@ export default function FounderWorkspace() {
         )}
 
         {/* ================================================================= */}
-        {/* MODULE 03 : RECHERCHE & RÉGLEMENTATION PARISIENNE                 */}
+        {/* MODULE 03 : QUESTIONS & VÉRIFICATIONS (RECHERCHE)                 */}
         {/* ================================================================= */}
         {activeModule === 'research' && (
           <div className="space-y-8 fade-enter">
             <div className="rounded-xl border border-[#1F6C9F]/30 bg-[#E1F3FE] p-4 text-xs text-[#1F6C9F]">
               <strong className="font-mono uppercase tracking-wider">
-                Politique d’Intégrité Documentaire — Zéro Établissement ou Article Fabriqué :
+                Avertissement — Aucune Affirmation Juridique ou Technique Certifiée :
               </strong>{' '}
-              Conformément à la charte Project Living Room, ce module ne contient aucun faux article
-              de presse ni établissement fictif présenté comme enquête terrain. Il structure les
-              exigences réglementaires réelles à Paris et vos propres protocoles d’observation.
+              Ce module ne contient aucune conclusion juridique arrêtée, aucun seuil technique
+              réglementaire affirmé sans source datée, ni aucun établissement/article fabriqué. Il
+              recense les questions pratiques que les fondateurs doivent faire vérifier par des
+              professionnels qualifiés (avocat, acousticien, architecte, administration).
             </div>
 
-            {/* Matrice réglementaire Paris */}
+            {/* Liste de questions à valider avec des professionnels */}
             <section className="rounded-xl border border-living-border bg-white p-6 sm:p-8">
               <span className="font-mono text-xs uppercase tracking-widest text-[#787774]">
-                Conformité Administrative & Technique Paris
+                Checklist de Vérification Professionnelle
               </span>
               <h3 className="mt-1 font-serif text-2xl font-normal text-living-ink">
-                Les 4 Piliers Réglementaires d’un Lieu Hybride Laverie + Café + Listening Bar
+                Questions Réglementaires & Techniques à Faire Valider
               </h3>
               <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
                 {REGULATORY_FRAMEWORK_ITEMS.map((item) => (
                   <div
                     key={item.id}
-                    className="rounded-xl border border-living-border bg-living-bg p-5"
+                    className="rounded-xl border border-living-border bg-living-bg p-5 flex flex-col justify-between"
                   >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-mono text-xs uppercase tracking-wider text-[#787774]">
-                        {item.category}
-                      </span>
-                      <span
-                        className={`rounded-full px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider ${
-                          item.riskLevel === 'Critique'
-                            ? 'bg-[#FDEBEC] text-[#9F2F2D]'
-                            : 'bg-[#FBF3DB] text-[#956400]'
-                        }`}
-                      >
-                        Risque {item.riskLevel}
-                      </span>
+                    <div>
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="font-mono text-xs uppercase tracking-wider text-[#787774]">
+                          {item.category}
+                        </span>
+                        <span className="rounded-full bg-[#FBF3DB] px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-[#956400]">
+                          À vérifier
+                        </span>
+                      </div>
+                      <h4 className="mt-2 font-serif text-lg font-normal text-living-ink">
+                        {item.title}
+                      </h4>
+                      <p className="mt-1 font-mono text-[11px] text-[#5C554E]">
+                        Interlocuteur à consulter : {item.whoToConsult}
+                      </p>
+                      <ul className="mt-3 space-y-1.5 text-xs leading-relaxed text-living-ink">
+                        {item.questionsToValidate.map((q, qIdx) => (
+                          <li key={qIdx}>• {q}</li>
+                        ))}
+                      </ul>
                     </div>
-                    <h4 className="mt-2 font-serif text-lg font-normal text-living-ink">
-                      {item.title}
-                    </h4>
-                    <p className="mt-1 font-mono text-[11px] text-[#5C554E]">
-                      Autorité : {item.authority}
-                    </p>
-                    <p className="mt-3 text-xs leading-relaxed text-living-ink">
-                      {item.requirementSummary}
-                    </p>
-                    <div className="mt-3 border-t border-living-border pt-2.5 text-xs text-[#5C554E]">
-                      <strong>Vérification :</strong> {item.verificationMethod}
+                    <div className="mt-4 border-t border-living-border pt-2.5 font-mono text-[11px] text-[#787774]">
+                      <div>Statut : {item.verificationStatus}</div>
+                      <div>
+                        Source officielle / Date de vérification :{' '}
+                        {item.officialSourceUrl && item.lastCheckedDate
+                          ? `${item.officialSourceUrl} (${item.lastCheckedDate})`
+                          : 'Aucune source officielle rattachée dans ce MVP'}
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             </section>
 
-            {/* Journal des protocoles et relevés terrain du fondateur */}
+            {/* Journal des questions et observations terrain du fondateur */}
             <section className="grid grid-cols-1 gap-6 lg:grid-cols-12">
               <div className="rounded-xl border border-living-border bg-white p-6 lg:col-span-7">
                 <h3 className="font-serif text-xl font-normal text-living-ink">
-                  Protocoles d’Enquête Terrain & Relevés Fondateurs
+                  Carnet de Questions Terrain & Protocoles d’Observation
                 </h3>
                 <p className="mt-1 text-xs text-[#5C554E]">
-                  Cliquez sur le badge de statut d’un protocole pour faire évoluer son avancement.
+                  Cliquez sur le badge d’une question pour faire évoluer son statut dans votre
+                  navigateur.
                 </p>
                 <div className="mt-5 space-y-4">
                   {workspaceState.researchNotes.map((note) => (
@@ -1732,7 +1774,7 @@ export default function FounderWorkspace() {
                         {note.hypothesisTested}
                       </p>
                       <p className="mt-2 border-t border-living-border pt-2 font-mono text-[11px] text-[#5C554E]">
-                        Méthode : {note.methodologyNote}
+                        Démarche : {note.methodologyNote}
                       </p>
                     </div>
                   ))}
@@ -1741,15 +1783,15 @@ export default function FounderWorkspace() {
 
               <div className="rounded-xl border border-living-border bg-white p-6 lg:col-span-5">
                 <h3 className="font-serif text-xl font-normal text-living-ink">
-                  Consigner une Note de Recherche Réelle
+                  Ajouter une Question ou une Source Vérifiée
                 </h3>
                 <p className="mt-1 text-xs text-[#5C554E]">
-                  Ajoutez vos observations de terrain vérifiées (sauvegardées localement).
+                  Notez vos questions ou références officielles avec leur date de consultation.
                 </p>
                 <form onSubmit={handleAddResearchNote} className="mt-4 space-y-3 text-xs">
                   <div>
                     <label htmlFor="res-axis" className="block font-medium text-living-ink">
-                      Axe d’analyse
+                      Thématique
                     </label>
                     <select
                       id="res-axis"
@@ -1767,13 +1809,13 @@ export default function FounderWorkspace() {
                   </div>
                   <div>
                     <label htmlFor="res-title" className="block font-medium text-living-ink">
-                      Titre du protocole ou du relevé
+                      Intitulé de la question ou du point à vérifier
                     </label>
                     <input
                       id="res-title"
                       type="text"
                       required
-                      placeholder="Ex: Relevé acoustique fournisseur pompes à chaleur"
+                      placeholder="Ex: Vérifier les conditions de raccordement avec l’installateur"
                       value={newResearchTitle}
                       onChange={(e) => setNewResearchTitle(e.target.value)}
                       className="mt-1 w-full rounded border border-living-border bg-living-bg px-3 py-2"
@@ -1781,13 +1823,13 @@ export default function FounderWorkspace() {
                   </div>
                   <div>
                     <label htmlFor="res-hyp" className="block font-medium text-living-ink">
-                      Hypothèse testée / Observation factuelle
+                      Détail de la question / Observation
                     </label>
                     <textarea
                       id="res-hyp"
                       rows={3}
                       required
-                      placeholder="Décrivez l’hypothèse ou la mesure observée..."
+                      placeholder="Précisez la question à poser ou le relevé effectué..."
                       value={newResearchHypothesis}
                       onChange={(e) => setNewResearchHypothesis(e.target.value)}
                       className="mt-1 w-full rounded border border-living-border bg-living-bg px-3 py-2"
@@ -1795,12 +1837,12 @@ export default function FounderWorkspace() {
                   </div>
                   <div>
                     <label htmlFor="res-method" className="block font-medium text-living-ink">
-                      Protocole / Source de vérification
+                      Source officielle / Interlocuteur & Date de vérification
                     </label>
                     <input
                       id="res-method"
                       type="text"
-                      placeholder="Ex: Devis technique fabricant / Visite sur site"
+                      placeholder="Ex: Entretien acousticien / URL texte officiel + date"
                       value={newResearchMethodology}
                       onChange={(e) => setNewResearchMethodology(e.target.value)}
                       className="mt-1 w-full rounded border border-living-border bg-living-bg px-3 py-2"
@@ -1810,7 +1852,7 @@ export default function FounderWorkspace() {
                     type="submit"
                     className="w-full rounded bg-living-ink px-4 py-2.5 font-medium text-white transition hover:bg-living-espresso"
                   >
-                    Enregistrer dans le Journal Local
+                    Ajouter au Carnet Local
                   </button>
                 </form>
               </div>
@@ -1819,26 +1861,26 @@ export default function FounderWorkspace() {
         )}
 
         {/* ================================================================= */}
-        {/* MODULE 04 : IMMOBILIER & CAHIER DES CHARGES LOCAL                 */}
+        {/* MODULE 04 : IMMOBILIER & GRILLE DE VISITE INDICATIVE              */}
         {/* ================================================================= */}
         {activeModule === 'property' && (
           <div className="space-y-8 fade-enter">
-            {/* Grille technique obligatoire */}
+            {/* Grille de questions pour les visites */}
             <section className="rounded-xl border border-living-border bg-white p-6 sm:p-8">
               <span className="font-mono text-xs uppercase tracking-widest text-[#787774]">
-                Cahier des Charges Technique · Paris Rive Droite (10e, 11e, 18e, 19e, 20e)
+                Grille d’Investigation Immobilière (Indicative & Non Normative)
               </span>
               <h3 className="mt-1 font-serif text-2xl font-normal text-living-ink">
-                Critères Physiques & Juridiques Non-Négociables du Local
+                Questions Techniques & Juridiques à Poser lors de la Visite d’un Local
               </h3>
               <div className="mt-6 overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead className="border-b border-living-border bg-living-muted font-mono text-[10px] uppercase text-[#5C554E]">
                     <tr>
-                      <th className="p-3">Critère Technique</th>
-                      <th className="p-3">Spécification Cible</th>
-                      <th className="p-3">Seuil Éliminatoire</th>
-                      <th className="p-3">Poids</th>
+                      <th className="p-3">Domaine</th>
+                      <th className="p-3">Question à Valider</th>
+                      <th className="p-3">Interlocuteur Compétent</th>
+                      <th className="p-3">Pondération Grille</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-living-border">
@@ -1847,13 +1889,11 @@ export default function FounderWorkspace() {
                         <td className="p-3 font-medium text-living-ink">
                           {spec.criterion}
                           <div className="mt-0.5 text-[11px] font-normal text-[#5C554E]">
-                            {spec.technicalRationale}
+                            {spec.indicativePlaceholderNote}
                           </div>
                         </td>
-                        <td className="p-3 font-mono text-living-ink">{spec.targetSpec}</td>
-                        <td className="p-3 font-mono text-[#9F2F2D]">
-                          {spec.eliminationThreshold}
-                        </td>
+                        <td className="p-3 text-living-ink">{spec.questionToValidate}</td>
+                        <td className="p-3 font-mono text-[#5C554E]">{spec.whoToConsult}</td>
                         <td className="p-3 font-mono font-semibold">{spec.weightPercent}%</td>
                       </tr>
                     ))}
@@ -1866,11 +1906,11 @@ export default function FounderWorkspace() {
             <section className="grid grid-cols-1 gap-6 lg:grid-cols-12">
               <div className="space-y-4 lg:col-span-7">
                 <h3 className="font-serif text-xl font-normal text-living-ink">
-                  Simulateur de Compatibilité des Locaux (Gabarits & Visites)
+                  Grille de Pointage Indicative des Visites (/100)
                 </h3>
                 <p className="text-xs text-[#5C554E]">
-                  Activez ou désactivez les prérequis techniques sur chaque fiche pour recalculer
-                  instantanément le score de compatibilité sur 100.
+                  Outil d’aide à la comparaison entre locaux visités. Un score élevé ne remplace ni
+                  un audit juridique du bail ni une étude acoustique.
                 </p>
 
                 {workspaceState.propertyEvaluations.map((prop) => {
@@ -1888,7 +1928,7 @@ export default function FounderWorkspace() {
                             </span>
                             {prop.isHypotheticalTemplate && (
                               <span className="rounded bg-[#FBF3DB] px-2 py-0.5 font-mono text-[10px] uppercase text-[#956400]">
-                                Gabarit Hypothétique
+                                Placeholder Fictif
                               </span>
                             )}
                           </div>
@@ -1906,24 +1946,24 @@ export default function FounderWorkspace() {
                                   : 'bg-[#FDEBEC] text-[#9F2F2D]'
                             }`}
                           >
-                            {scoreRes.scoreOutOf100}/100 · {scoreRes.verdict}
+                            Score indicatif : {scoreRes.scoreOutOf100}/100
                           </span>
                         </div>
                       </div>
 
                       <div className="mt-3 grid grid-cols-3 gap-2 rounded-lg bg-living-bg p-3 font-mono text-xs">
                         <div>
-                          <span className="text-[10px] text-[#787774]">Surface</span>
+                          <span className="text-[10px] text-[#787774]">Surface saisie</span>
                           <div className="font-semibold">{prop.surfaceSqm} m²</div>
                         </div>
                         <div>
-                          <span className="text-[10px] text-[#787774]">Loyer HC / mois</span>
+                          <span className="text-[10px] text-[#787774]">Loyer HC saisi</span>
                           <div className="font-semibold">
                             {formatEur(prop.monthlyRentExclCharges)}
                           </div>
                         </div>
                         <div>
-                          <span className="text-[10px] text-[#787774]">Droit au bail</span>
+                          <span className="text-[10px] text-[#787774]">Droit au bail saisi</span>
                           <div className="font-semibold">{formatEur(prop.leaseAssignmentCost)}</div>
                         </div>
                       </div>
@@ -1938,7 +1978,7 @@ export default function FounderWorkspace() {
                               : 'border-[#9F2F2D]/40 bg-[#FDEBEC] text-[#9F2F2D]'
                           }`}
                         >
-                          {prop.hasConcreteSlab ? '[OK] Dalle béton' : '[NON] Dalle béton'}
+                          {prop.hasConcreteSlab ? '[Coché] Plancher/Acoustique' : '[À vérifier] Plancher'}
                         </button>
                         <button
                           type="button"
@@ -1949,7 +1989,7 @@ export default function FounderWorkspace() {
                               : 'border-[#9F2F2D]/40 bg-[#FDEBEC] text-[#9F2F2D]'
                           }`}
                         >
-                          {prop.hasThreePhasePower ? '[OK] Triphasé 36kVA+' : '[NON] Triphasé'}
+                          {prop.hasThreePhasePower ? '[Coché] Élec. & Fluides' : '[À vérifier] Fluides'}
                         </button>
                         <button
                           type="button"
@@ -1960,7 +2000,7 @@ export default function FounderWorkspace() {
                               : 'border-[#9F2F2D]/40 bg-[#FDEBEC] text-[#9F2F2D]'
                           }`}
                         >
-                          {prop.hasBarLicenseAllowed ? '[OK] Clause Bar/Lic.IV' : '[NON] Clause Bar'}
+                          {prop.hasBarLicenseAllowed ? '[Coché] Bail & Copro' : '[À vérifier] Bail'}
                         </button>
                         <button
                           type="button"
@@ -1971,14 +2011,14 @@ export default function FounderWorkspace() {
                               : 'border-living-border bg-living-bg text-[#5C554E]'
                           }`}
                         >
-                          {prop.hasAdequateFacade ? '[OK] Vitrine >= 7m' : '[NON] Vitrine < 7m'}
+                          {prop.hasAdequateFacade ? '[Coché] Vitrine & Accès' : '[À vérifier] Vitrine'}
                         </button>
                       </div>
 
                       {scoreRes.blockers.length > 0 && (
                         <ul className="mt-3 space-y-1 border-t border-living-border pt-2.5 text-xs text-[#9F2F2D]">
                           {scoreRes.blockers.map((b, i) => (
-                            <li key={i}>• Point de blocage : {b}</li>
+                            <li key={i}>• {b}</li>
                           ))}
                         </ul>
                       )}
@@ -1987,24 +2027,25 @@ export default function FounderWorkspace() {
                 })}
               </div>
 
-              {/* Formulaire d'ajout d'un local visité */}
+              {/* Formulaire d'ajout d'une fiche de visite */}
               <div className="rounded-xl border border-living-border bg-white p-6 lg:col-span-5 self-start">
                 <h3 className="font-serif text-xl font-normal text-living-ink">
-                  Évaluer un Nouveau Local Candidat
+                  Ajouter une Fiche de Visite Locale
                 </h3>
                 <p className="mt-1 text-xs text-[#5C554E]">
-                  Saisissez les caractéristiques d’un local réel lors de vos visites à Paris.
+                  Comparez un local visité à l’aide de la grille indicative (sauvegardé dans votre
+                  navigateur).
                 </p>
                 <form onSubmit={handleAddPropertyCandidate} className="mt-4 space-y-3 text-xs">
                   <div>
                     <label htmlFor="prop-label" className="block font-medium text-living-ink">
-                      Identification du local / Rue
+                      Nom ou repère de la visite
                     </label>
                     <input
                       id="prop-label"
                       type="text"
                       required
-                      placeholder="Ex: Local commercial 118 m² — Secteur Oberkampf"
+                      placeholder="Ex: Visite #1 — Local commercial sur rue"
                       value={newPropLabel}
                       onChange={(e) => setNewPropLabel(e.target.value)}
                       className="mt-1 w-full rounded border border-living-border bg-living-bg px-3 py-2"
@@ -2013,7 +2054,7 @@ export default function FounderWorkspace() {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label htmlFor="prop-zone" className="block font-medium text-living-ink">
-                        Arrondissement / Zone
+                        Quartier / Secteur
                       </label>
                       <input
                         id="prop-zone"
@@ -2030,7 +2071,7 @@ export default function FounderWorkspace() {
                       <input
                         id="prop-surface"
                         type="number"
-                        min={30}
+                        min={10}
                         value={newPropSurface}
                         onChange={(e) => setNewPropSurface(Number(e.target.value))}
                         className="mt-1 w-full rounded border border-living-border bg-living-bg px-3 py-2 font-mono"
@@ -2054,7 +2095,7 @@ export default function FounderWorkspace() {
                     </div>
                     <div>
                       <label htmlFor="prop-dab" className="block font-medium text-living-ink">
-                        Droit au bail demandé (€)
+                        Droit au bail (€)
                       </label>
                       <input
                         id="prop-dab"
@@ -2075,7 +2116,7 @@ export default function FounderWorkspace() {
                         checked={newPropSlab}
                         onChange={(e) => setNewPropSlab(e.target.checked)}
                       />
-                      <span>Dalle béton pleine permettant désolidarisation acoustique</span>
+                      <span>Structure plancher / acoustique pré-validée</span>
                     </label>
                     <label className="flex items-center gap-2">
                       <input
@@ -2083,7 +2124,7 @@ export default function FounderWorkspace() {
                         checked={newPropPower}
                         onChange={(e) => setNewPropPower(e.target.checked)}
                       />
-                      <span>Puissance électrique Triphasée 36-60 kVA + évacuation EU 100mm</span>
+                      <span>Puissance électrique & évacuations d’eau pré-validées</span>
                     </label>
                     <label className="flex items-center gap-2">
                       <input
@@ -2091,7 +2132,7 @@ export default function FounderWorkspace() {
                         checked={newPropLicense}
                         onChange={(e) => setNewPropLicense(e.target.checked)}
                       />
-                      <span>Bail & copropriété autorisant Bar / Licence IV</span>
+                      <span>Destination du bail & copropriété compatibles</span>
                     </label>
                     <label className="flex items-center gap-2">
                       <input
@@ -2099,7 +2140,7 @@ export default function FounderWorkspace() {
                         checked={newPropFacade}
                         onChange={(e) => setNewPropFacade(e.target.checked)}
                       />
-                      <span>Linéaire façade vitrine &ge; 7 mètres</span>
+                      <span>Façade, visibilité et accès adaptés</span>
                     </label>
                   </div>
 
@@ -2107,7 +2148,7 @@ export default function FounderWorkspace() {
                     type="submit"
                     className="w-full rounded bg-living-ink px-4 py-2.5 font-medium text-white transition hover:bg-living-espresso"
                   >
-                    Calculer le Score & Enregistrer la Fiche
+                    Enregistrer la Fiche de Visite
                   </button>
                 </form>
               </div>
@@ -2123,10 +2164,10 @@ export default function FounderWorkspace() {
             {/* Chorégraphie Diurne / Nocturne */}
             <section className="rounded-xl border border-living-border bg-white p-6 sm:p-8">
               <span className="font-mono text-xs uppercase tracking-widest text-[#787774]">
-                Chorégraphie Spatiale, Sonore & Opérationnelle
+                Hypothèses d’Organisation Spatiale & Temporelle
               </span>
               <h3 className="mt-1 font-serif text-2xl font-normal text-living-ink">
-                Les 3 Séquences Quotidiennes de Project Living Room
+                Les 3 Séquences Quotidiennes à Étudier
               </h3>
               <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
                 {IDEA_LAB_DAY_NIGHT_MODES.map((mode) => (
@@ -2139,8 +2180,8 @@ export default function FounderWorkspace() {
                         <span className="rounded bg-living-ink px-2.5 py-0.5 font-mono text-xs text-white">
                           {mode.timeSlot}
                         </span>
-                        <span className="font-mono text-xs text-[#346538]">
-                          Marge brute cible ~{mode.targetMarginPercent}%
+                        <span className="font-mono text-[11px] text-[#956400]">
+                          Hypothèse d’atelier
                         </span>
                       </div>
                       <h4 className="mt-3 font-serif text-lg font-normal text-living-ink">
@@ -2155,15 +2196,18 @@ export default function FounderWorkspace() {
                     <div className="mt-5 space-y-2 border-t border-living-border pt-3 text-xs">
                       <div>
                         <strong className="font-mono text-[11px] uppercase text-living-ink">
-                          Signature Acoustique :
+                          Ambiance Sonore Visée :
                         </strong>
                         <p className="text-[#5C554E]">{mode.acousticAtmosphere}</p>
                       </div>
                       <div>
                         <strong className="font-mono text-[11px] uppercase text-living-ink">
-                          Synergie Opérationnelle :
+                          Point d’Organisation :
                         </strong>
                         <p className="text-[#5C554E]">{mode.operationalSynergy}</p>
+                      </div>
+                      <div className="pt-1 font-mono text-[11px] text-[#956400]">
+                        {mode.openQuestionToValidate}
                       </div>
                     </div>
                   </div>
@@ -2175,7 +2219,7 @@ export default function FounderWorkspace() {
             <section className="grid grid-cols-1 gap-6 lg:grid-cols-12">
               <div className="space-y-4 lg:col-span-7">
                 <h3 className="font-serif text-xl font-normal text-living-ink">
-                  Registre des Dispositifs Conceptuels & Techniques
+                  Carnet d’Idées & Pistes à Prototyper
                 </h3>
                 <div className="grid grid-cols-1 gap-4">
                   {workspaceState.founderIdeas.map((idea) => (
@@ -2208,8 +2252,8 @@ export default function FounderWorkspace() {
                         {idea.description}
                       </p>
                       <div className="mt-3 flex items-center gap-4 border-t border-living-border pt-2.5 font-mono text-xs">
-                        <span>Impact Expérience : {idea.impactScore}/5</span>
-                        <span>Faisabilité Technique : {idea.feasibilityScore}/5</span>
+                        <span>Intérêt Estimé : {idea.impactScore}/5</span>
+                        <span>Simplicité Estimée : {idea.feasibilityScore}/5</span>
                       </div>
                     </div>
                   ))}
@@ -2218,7 +2262,7 @@ export default function FounderWorkspace() {
 
               <div className="rounded-xl border border-living-border bg-white p-6 lg:col-span-5 self-start">
                 <h3 className="font-serif text-xl font-normal text-living-ink">
-                  Tester une Nouvelle Idée dans l’Idea Lab
+                  Noter une Nouvelle Piste dans l’Idea Lab
                 </h3>
                 <form onSubmit={handleAddFounderIdea} className="mt-4 space-y-3 text-xs">
                   <div>
@@ -2241,13 +2285,13 @@ export default function FounderWorkspace() {
                   </div>
                   <div>
                     <label htmlFor="idea-title" className="block font-medium text-living-ink">
-                      Intitulé de l’idée
+                      Intitulé de la piste
                     </label>
                     <input
                       id="idea-title"
                       type="text"
                       required
-                      placeholder="Ex: Abonnement mensuel lavage + café illimité heures creuses"
+                      placeholder="Ex: Casiers de dépôt linge en heures creuses"
                       value={newIdeaTitle}
                       onChange={(e) => setNewIdeaTitle(e.target.value)}
                       className="mt-1 w-full rounded border border-living-border bg-living-bg px-3 py-2"
@@ -2255,13 +2299,13 @@ export default function FounderWorkspace() {
                   </div>
                   <div>
                     <label htmlFor="idea-desc" className="block font-medium text-living-ink">
-                      Mécanique opérationnelle & bénéfice attendu
+                      Description & question à tester
                     </label>
                     <textarea
                       id="idea-desc"
                       rows={3}
                       required
-                      placeholder="Décrivez le fonctionnement concret..."
+                      placeholder="Décrivez l’idée et comment la vérifier..."
                       value={newIdeaDesc}
                       onChange={(e) => setNewIdeaDesc(e.target.value)}
                       className="mt-1 w-full rounded border border-living-border bg-living-bg px-3 py-2"
@@ -2270,7 +2314,7 @@ export default function FounderWorkspace() {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label htmlFor="idea-impact" className="block font-medium text-living-ink">
-                        Score Impact (/5)
+                        Intérêt (/5)
                       </label>
                       <input
                         id="idea-impact"
@@ -2284,7 +2328,7 @@ export default function FounderWorkspace() {
                     </div>
                     <div>
                       <label htmlFor="idea-feas" className="block font-medium text-living-ink">
-                        Score Faisabilité (/5)
+                        Simplicité (/5)
                       </label>
                       <input
                         id="idea-feas"
@@ -2318,14 +2362,14 @@ export default function FounderWorkspace() {
               <div className="flex flex-wrap items-center justify-between gap-4 border-b border-living-border pb-5">
                 <div>
                   <span className="font-mono text-xs uppercase tracking-widest text-[#787774]">
-                    Rétroplanning Exécutif · T4 2026 → Décembre 2027
+                    Feuille de Route Indicative · Horizon Cible Décembre 2027
                   </span>
                   <h3 className="mt-1 font-serif text-2xl font-normal text-living-ink">
-                    Séquencement des 5 Portes de Décision (Decision Gates)
+                    Grandes Étapes de Structuration du Projet
                   </h3>
                 </div>
                 <span className="font-mono text-xs text-[#5C554E]">
-                  Cliquez sur le statut d’une phase pour mettre à jour sa progression
+                  Cliquez sur le statut d’une étape pour mettre à jour votre suivi local
                 </span>
               </div>
 
@@ -2341,7 +2385,7 @@ export default function FounderWorkspace() {
                           {ms.quarter}
                         </span>
                         <span className="font-mono text-xs text-[#787774]">
-                          Étape 0{idx + 1} · {ms.targetDate}
+                          Phase 0{idx + 1} · {ms.targetDate}
                         </span>
                       </div>
                       <button
@@ -2370,7 +2414,7 @@ export default function FounderWorkspace() {
                     </ul>
 
                     <div className="mt-4 rounded-lg border border-living-border bg-white p-3 font-mono text-xs text-living-ink">
-                      <strong>Critère de passage :</strong> {ms.decisionGate}
+                      <strong>Jalon de validation :</strong> {ms.decisionGate}
                     </div>
                   </div>
                 ))}
@@ -2380,15 +2424,16 @@ export default function FounderWorkspace() {
         )}
       </main>
 
-      {/* Pied de page minimaliste */}
+      {/* Pied de page honnête */}
       <footer className="mt-12 border-t border-living-border bg-white px-4 py-6 text-xs text-[#787774]">
         <div className="mx-auto max-w-7xl flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <strong>Project Living Room</strong> — Cockpit Fondateur Privé · Cible Ouverture Paris
-            Décembre 2027
+            <strong>Project Living Room</strong> — Prototype MVP Local-First · Cible Indicative
+            Paris Décembre 2027
           </div>
           <div className="font-mono text-[11px]">
-            Hypothèses financières modifiables · Stockage local navigateur · Non destiné au public
+            Valeurs d’exemple fictives · Aucun conseil juridique ou financier · Sans authentification
+            active
           </div>
         </div>
       </footer>
