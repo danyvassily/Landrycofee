@@ -49,13 +49,15 @@
 
 ## Installation & Commandes
 
-### Prérequis
-- Node.js 18+ (compatible Node 20 / 22 / 26)
-- npm
+### Statut et confidentialité (important)
 
-### Développement local
+Cette livraison est un **MVP local**, pas encore un espace privé multi-utilisateur prêt à publier. L'application n'a pas d'authentification serveur, de base Supabase configurée ni de synchronisation entre fondateurs. Les directives `noindex` ne protègent pas l'accès. N'hébergez pas de données financières privées avant d'avoir mis en place et testé un vrai contrôle d'accès. Les données des modules de recherche sont des grilles et hypothèses, pas des résultats documentaires vérifiés. Aucune automatisation quotidienne n'est configurée.
+
+Node.js 22.12+ est recommandé pour l'arbre de dépendances actuel.
+
+### Installation et développement local
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
